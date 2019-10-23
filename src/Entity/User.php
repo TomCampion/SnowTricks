@@ -48,7 +48,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $profilPictureFileName;
+    private $profilePictureFileName;
 
     /**
      * @ORM\Column(type="datetime")
@@ -196,14 +196,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getProfilPictureFileName(): ?string
+    public function getprofilePictureFileName(): ?string
     {
-        return $this->profilPictureFileName;
+        return $this->profilePictureFileName;
     }
 
-    public function setProfilPictureFileName(?string $profilPictureFileName): self
+    public function setprofilePictureFileName(?string $profilePictureFileName): self
     {
-        $this->profilPictureFileName = $profilPictureFileName;
+        $this->profilePictureFileName = $profilePictureFileName;
 
         return $this;
     }
