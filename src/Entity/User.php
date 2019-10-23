@@ -77,6 +77,7 @@ class User implements UserInterface
         $this->tricks = new ArrayCollection();
 
         $this->creationDate = new \DateTime();
+        $this->roles = array('ROLE_USER');
     }
 
     public function getId(): ?int
