@@ -65,6 +65,16 @@ class User implements UserInterface
      */
     private $username;
 
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $confirmationToken;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $isActive;
+
 
     public function __construct()
     {
@@ -73,6 +83,7 @@ class User implements UserInterface
 
         $this->creationDate = new \DateTime();
         $this->roles = array('ROLE_USER');
+        $this->confirmationToken = bin2hex(random_bytes(25));
     }
 
     public function getId(): ?int
@@ -254,6 +265,30 @@ class User implements UserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
