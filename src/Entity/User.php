@@ -41,16 +41,6 @@ class User implements UserInterface
     private $comments;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $firstname;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $lastname;
-
-    /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $ban;
@@ -69,6 +59,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="author")
      */
     private $tricks;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $username;
 
 
     public function __construct()
@@ -104,7 +99,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
@@ -131,7 +126,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -185,30 +180,6 @@ class User implements UserInterface
                 $comment->setAuthor(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): self
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): self
-    {
-        $this->lastname = $lastname;
 
         return $this;
     }
@@ -276,6 +247,13 @@ class User implements UserInterface
                 $trick->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }
