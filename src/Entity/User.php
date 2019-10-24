@@ -66,14 +66,20 @@ class User implements UserInterface
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $isActive;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\token", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      */
     private $confirmationToken;
 
     /**
-     * @ORM\Column(type="boolean", options={"default": false})
+     * @ORM\OneToOne(targetEntity="App\Entity\token", cascade={"persist", "remove"})
      */
-    private $isActive;
+    private $passwordToken;
 
 
     public function __construct()
@@ -269,18 +275,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getConfirmationToken(): ?string
-    {
-        return $this->confirmationToken;
-    }
-
-    public function setConfirmationToken(string $confirmationToken): self
-    {
-        $this->confirmationToken = $confirmationToken;
-
-        return $this;
-    }
-
     public function getIsActive(): ?bool
     {
         return $this->isActive;
@@ -289,6 +283,30 @@ class User implements UserInterface
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getConfirmationToken(): ?token
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(token $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+    public function getPasswordToken(): ?token
+    {
+        return $this->passwordToken;
+    }
+
+    public function setPasswordToken(?token $passwordToken): self
+    {
+        $this->passwordToken = $passwordToken;
 
         return $this;
     }
