@@ -89,7 +89,6 @@ class User implements UserInterface
 
         $this->creationDate = new \DateTime();
         $this->roles = array('ROLE_USER');
-        $this->confirmationToken = bin2hex(random_bytes(25));
     }
 
     public function getId(): ?int
