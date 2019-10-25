@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\TokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,7 +18,7 @@ class Token
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $value;
 
@@ -25,6 +26,11 @@ class Token
      * @ORM\Column(type="datetime")
      */
     private $creationDate;
+
+    public function __construct()
+    {
+        $this->creationDate = new \DateTime();
+    }
 
     public function getId(): ?int
     {
