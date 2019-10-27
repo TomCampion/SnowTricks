@@ -13,7 +13,44 @@
             </div>
         {% endfor %}
 
+        {% for message in app.flashes('failed') %}
+            <div class="custom_container mt-3 container alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         <div class="custom_container container border form-group d-flex align-items-center flex-column justify-content-around">
+
+            <form method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="mb-3">
+                        Vous êtes déjà connecté en tant que {{ app.user.username }}
+                        <br>
+                        <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                    </div>
+                {% endif %}
+
+                <label for="inputEmail">Email</label>
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+                <label for="inputPassword" class="mt-4">Mot de passe</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="checkbox mb-3 mt-2">
+                    <label>
+                        <input type="checkbox" name="_remember_me"> Se souvenir de moi
+                    </label>
+                </div>
+
+                <div class="text-center">
+                    <button class="w-100 btn-lg btn-primary btn-primary-blue-reverse" type="submit">Connexion</button>
+                </div>
+            </form>
 
             <div class="mt-2 div-a d-flex flex-column align-items-center justify-content-between">
                 <a class="font-white blue-hover" href="{{ path('register') }}">Pas encore de compte ?</a>
