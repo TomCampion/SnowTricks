@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+    <section class="flex-column">
+
+        <h1 class="mt-5 text-center">Inscription</h1>
+
+        <div class="custom_container container border form-group d-flex align-items-center flex-column justify-content-around">
+
+            {{ form_start(form) }}
+                {{ form_rest(form) }}
+            <div class="text-center">
+                <p>* Champs obligatoires</p>
+                <button class="btn btn-primary btn-primary-blue-reverse" type="submit">Créer un compte</button>
+            </div>
+            {{ form_end(form) }}
+
+            <div class="mt-2 div-a d-flex flex-column align-items-center justify-content-between">
+                <a class="font-white blue-hover" href="{{ path('login') }}">Déjà un compte ?</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
