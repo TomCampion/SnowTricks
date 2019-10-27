@@ -6,9 +6,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(
+ *     "email",
+ *     message="cet email est déjà utilisé"
+ * )
+ * @UniqueEntity(
+ *     "username",
+ *     message="ce nom d'utilisateur est déjà utilisé"
+ * )
  */
 class User implements UserInterface
 {
@@ -21,6 +30,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Length(
+     *      max = 180,
+     *      maxMessage = "L'email ne peut pas excéder {{ limit }} caractères"
+     * )
+     * @Assert\Email(
+     *     message = "L'email '{{ value }}' n'est pas valide.",
+     *     checkMX = true
+     * )
      */
     private $email;
 
@@ -43,7 +60,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $ban;
+    private $ban = 0;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -61,14 +78,20 @@ class User implements UserInterface
     private $tricks;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255,
+     *      minMessage = "Votre nom d'utilisateur doit faire au moins {{ limit }} caractères",
+     *      maxMessage = "Votre nom d'utilisateur ne doit pas excéder {{ limit }} caractères"
+     * )
      */
     private $username;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $isActive;
+    private $isActive = 0;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\token", cascade={"persist", "remove"})
@@ -81,6 +104,15 @@ class User implements UserInterface
      */
     private $passwordToken;
 
+    /**
+     * @Assert\Length(
+     *      min = 4,
+     *      max = 50,
+     *      minMessage = "Votre mot de passe doit faire au moins {{ limit }} caractères",
+     *      maxMessage = "Votre mot de passe ne doit pas excéder {{ limit }} caractères"
+     * )
+     */
+    private $plainPassword;
 
     public function __construct()
     {
@@ -306,6 +338,18 @@ class User implements UserInterface
     public function setPasswordToken(?token $passwordToken): self
     {
         $this->passwordToken = $passwordToken;
+
+        return $this;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
 
         return $this;
     }
