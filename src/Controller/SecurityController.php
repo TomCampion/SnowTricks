@@ -191,6 +191,7 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/resetPassword/{token}/{username}", name="reset_password")
+     * @param Request $request
      * @param $token
      * @param $username
      * @return Response

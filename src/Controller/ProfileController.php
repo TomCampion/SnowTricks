@@ -33,6 +33,7 @@ class ProfileController extends AbstractController
      * @Route("/profil", name="profile")
      * @param Request $request
      * @param LoggerInterface $logger
+     * @param UserPasswordEncoderInterface $passwordEncoder
      * @return Response
      */
     public function profile(Request $request, LoggerInterface $logger,  UserPasswordEncoderInterface $passwordEncoder): Response

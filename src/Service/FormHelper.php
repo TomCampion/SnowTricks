@@ -12,6 +12,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class FormHelper
 {
 
+    /**
+     * @param array $fields
+     * @param FormBuilderInterface $builder
+     */
     public function addPasswordFields(Array $fields, FormBuilderInterface $builder){
         foreach ($fields as $key => $value)
         {
