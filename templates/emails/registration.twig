@@ -1,0 +1,11 @@
+{% block body %}
+
+    <h2>Confirmation de votre insription et activation de votre compte.</h2>
+
+    <p>Bonjour {{ username }}, nous vous confirmons la création de votre compte sur Snowtricks.com et nous vous en remercions. <br>
+        Pour confirmer votre inscription veuillez cliquer sur le liens suivant : <a href="{{ app.request.getSchemeAndHttpHost() }}{{ app.request.getBaseURL() }}/activeAccount/{{ token }}/{{ username }}">Activer mon compte</a>
+        <br>
+        Merci et à très bientôt sur Snowtricks.com
+    </p>
+
+{% endblock %}

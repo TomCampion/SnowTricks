@@ -1,0 +1,39 @@
+#bg{
+    height: 95vh;
+    margin:0;
+    padding:0;
+    background: url("/snowtricks/public/images/bg.jpg") no-repeat center fixed;
+    -webkit-background-size: cover; /* pour anciens Chrome et Safari */
+    background-size: cover; /* version standardisée */
+}
+
+#arrow{
+    font-size: 40px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 15px;
+    margin-bottom: 55px;
+    color: lightcyan;
+}
+
+#logo-navbar{
+    width:70px;
+}
+
+#mobile-navbar{
+    background: whitesmoke;
+    border-top: 1px solid #007bff;
+}
+
+#sticky-footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.custom_container{
+    max-width:420px !important;
+    margin-top: 8vh;
+    padding:15px;
+}
