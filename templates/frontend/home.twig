@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Snowtricks {% endblock %}
+
+{% block content %}
+    <div id="bg" class="container-fluid d-flex flex-column justify-content-center text-white align-items-center font-weight-bolder">
+        <h1 class="border-bottom border-info">SNOWTRICKS</h1>
+        <h2 class="text-center">Le site communautaire pour apprendre les figures de snowboard</h2>
+        <a href="#tricks"><i id="arrow" class="fas fa-arrow-down"></i></a>
+    </div>
+    <div id="tricks" class="container-fluid">
+
+    {% for message in app.flashes('success') %}
+    <div class="container-fluid mt-3 text-center container alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+
+        <div class="p-sm-5 pt-4 row">
+
+            {% for trick in tricks %}
+
+                <div class="col-sm mb-4">
+                    <div class="card mx-auto" style="width: 18rem;">
+                        {% if trick.images is empty %}
+                            <img class="shadow-sm" style="height: 200px;" src="{{asset('images/trick/default.jpg')}}">
+                        {% else %}
+                            <img class="shadow-sm" style="height: 200px;" src="{{asset('images/trick/' ~ trick.id ~ '/' ~ trick.images.first.filename ) }}" alt="{{ trick.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title d-inline">{{trick.name}}</h5>
+                            {% if trick.author == app.user %}
+                            <div class="float-right">
+                                <a href="{{ path('edit_trick',{ 'trick_id': trick.id } ) }}"> <i class="mr-2 text-dark fas fa-pencil-alt"></i></a>
+                                <a onclick="return confirm('Etes-vous sûr de vouloir supprimer ce trick ?')" href="{{ path('delete_trick',{ 'trick_id': trick.id } ) }}"><i class="text-dark fas fa-trash-alt"></i></a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        <div class="container-fluid text-center mb-4">
+            <button type="button" class="btn btn-primary">Voir plus</button>
+            {% if app.user %}
+                <button id="add_trick" type="button" class="btn btn-primary"><a class="text-white" href="{{ path('add_trick') }}">Ajouter un trick</a></button>
+            {% endif %}
+        </div>
+
+        </div>
+
+    </div>
+{% endblock %}
