@@ -13,13 +13,13 @@ class Trick
 {
 
     const GROUP = [
-        0 => 'grab',
-        1 => 'rotation',
-        2 => 'rotation désaxée',
-        3 => 'flip',
-        4 => 'slide',
-        5 => 'one foot trick',
-        6 => 'old school'
+        'grab',
+        'rotation',
+        'rotation désaxée',
+        'flip',
+        'slide',
+        'one foot trick',
+        'old school'
     ];
 
     /**
