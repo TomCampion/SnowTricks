@@ -102,6 +102,7 @@ class SecurityController extends AbstractController
         $tokenExist = $user->getConfirmationToken()->getValue();
         if($token === $tokenExist) {
             $user->setIsActive(true);
+            $user->getConfirmationToken()->setValue('');
             $this->em->persist($user);
             $this->em->flush();
 
