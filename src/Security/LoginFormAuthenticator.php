@@ -68,7 +68,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Adresse email non reconnu.');
+            throw new CustomUserMessageAuthenticationException('Identifiants invalides.');
         }
 
         if ($user->getIsActive() === false) {
