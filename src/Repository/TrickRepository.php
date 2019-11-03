@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -19,4 +20,14 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
+    public function getTricksNumberByUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('count(n.id)');
+        $qb->from(Trick::class,'t');
+        $qb->where('n.author ='.$user->getId());
+
+        $count = $qb->getQuery()->getSingleScalarResult();
+        return $count;
+    }
 }

@@ -30,6 +30,12 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     *  @Assert\NotNull(
+     *     message= "Vous devez renseigner une adresse email"
+     *  )
+     *  @Assert\NotBlank(
+     *     message= "Vous devez renseigner une adresse email"
+     *  )
      * @Assert\Length(
      *      max = 180,
      *      maxMessage = "L'email ne peut pas excéder {{ limit }} caractères"
@@ -78,10 +84,16 @@ class User implements UserInterface
     private $tricks;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=55, unique=true)
+     * @Assert\NotNull(
+     *     message= "Vous devez renseigner un nom d'utilisateur"
+     * )
+     * @Assert\NotBlank(
+     *     message= "Vous devez renseigner un nom d'utilisateur"
+     * )
      * @Assert\Length(
      *      min = 2,
-     *      max = 255,
+     *      max = 55,
      *      minMessage = "Votre nom d'utilisateur doit faire au moins {{ limit }} caractères",
      *      maxMessage = "Votre nom d'utilisateur ne doit pas excéder {{ limit }} caractères"
      * )
@@ -105,6 +117,12 @@ class User implements UserInterface
     private $passwordToken;
 
     /**
+     * * @Assert\NotNull(
+     *     message= "Vous devez renseigner un mot de passe"
+     * )
+     * @Assert\NotBlank(
+     *     message= "Vous devez renseigner un mot de passe"
+     * )
      * @Assert\Length(
      *      min = 4,
      *      max = 50,

@@ -75,6 +75,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             throw new CustomUserMessageAuthenticationException('Vous devez activer votre compte via le lien qui vous a été envoyé par mail !');
         }
 
+        if ($user->getBan() === true) {
+            throw new CustomUserMessageAuthenticationException('Votre compte à été banni, vous ne pouvez plus vous connecter !');
+        }
+
         return $user;
     }
 

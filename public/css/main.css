@@ -27,7 +27,6 @@
 }
 
 #sticky-footer{
-    position: fixed;
     bottom: 0;
     width: 100%;
 }
@@ -36,4 +35,33 @@
     max-width:420px !important;
     margin-top: 8vh;
     padding:15px;
+}
+
+section{
+    min-height: 80.6vh;
+}
+
+.profile_infos{
+    font-size: 1.5rem;
+}
+
+label[for=edit_profile_picture_avatar]
+{
+    margin-bottom: 0px;
+    cursor: pointer;
+}
+
+form[name=edit_profile_picture]
+{
+    display: inherit;
+}
+
+.custom-file-label, #edit_profile_picture_avatar, .custom-file
+{
+    display: none !important;
+}
+
+form[name=edit_profile_picture] .form-group
+{
+    margin-bottom: 0px;
 }
