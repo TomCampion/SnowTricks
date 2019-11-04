@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "username",
  *     message="ce nom d'utilisateur est déjà utilisé"
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface
 {
@@ -137,7 +138,6 @@ class User implements UserInterface
         $this->comments = new ArrayCollection();
         $this->tricks = new ArrayCollection();
 
-        $this->creationDate = new \DateTime();
         $this->roles = array('ROLE_USER');
     }
 
@@ -370,5 +370,13 @@ class User implements UserInterface
         $this->plainPassword = $password;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function creationDate()
+    {
+        $this->setCreationDate(new \Datetime());
     }
 }

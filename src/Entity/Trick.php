@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "name",
  *     message="ce nom est déjà utilisé"
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class Trick
 {
@@ -121,8 +122,6 @@ class Trick
         $this->images = new ArrayCollection();
         $this->videos = new ArrayCollection();
         $this->comments = new ArrayCollection();
-
-        $this->creationDate = new \DateTime();
     }
 
     public function getId(): ?int
@@ -305,5 +304,21 @@ class Trick
         $this->author = $author;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateDate()
+    {
+        $this->setUpdateDate(new \Datetime());
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function creationDate()
+    {
+        $this->setCreationDate(new \Datetime());
     }
 }
