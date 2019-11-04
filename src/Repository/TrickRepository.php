@@ -22,12 +22,11 @@ class TrickRepository extends ServiceEntityRepository
 
     public function getTricksNumberByUser(User $user)
     {
-        $qb = $this->createQueryBuilder('n');
-        $qb->select('count(n.id)');
-        $qb->from(Trick::class,'t');
-        $qb->where('n.author ='.$user->getId());
+        $rawSql = 'SELECT COUNT(t.id) FROM trick AS t WHERE t.author_id = '.$user->getId();
 
-        $count = $qb->getQuery()->getSingleScalarResult();
-        return $count;
+        $stmt = $this->getEntityManager()->getConnection()->prepare($rawSql);
+        $stmt->execute();
+
+        return $stmt->fetch()["COUNT(t.id)"];
     }
 }
