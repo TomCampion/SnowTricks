@@ -86,7 +86,7 @@ class TrickController extends AbstractController
                 "success",
                 "Nouveau trick enregistré !"
             );
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('home');
 
         }
 
