@@ -15,7 +15,10 @@ class EditProfilePictureType extends AbstractType
         $builder
             ->add('avatar', FileType::class, [
                 'label' => 'Changer d\'Avatar',
-                'attr' => ['onChange' => 'this.form.submit()'],
+                'attr' => [
+                    'onChange' => 'this.form.submit()',
+                    'accept' => 'image/*',
+                ],
                 'constraints' => [
                     new File([
                         'maxSize' => '2048k',
@@ -24,7 +27,7 @@ class EditProfilePictureType extends AbstractType
                         ],
                         'mimeTypesMessage' => 'Vous devez mettre un fichier de type .png ou .jpg',
                     ])
-                ],
+                ]
             ])
         ;
     }
