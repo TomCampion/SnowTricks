@@ -206,25 +206,41 @@ class SecurityController extends AbstractController
         $tokenExist = $user->getPasswordToken()->getValue();
 
         if($token === $tokenExist) {
-            if($form->isSubmitted() and $form->isValid())
+
+            //Check token expiration date
+            $days = getenv('FORGOT_PASSWORD_TOKEN_DURATION');
+            $maxInterval = date_interval_create_from_date_string("$days days");
+            $expirationDate = date_add($user->getPasswordToken()->getCreationDate(),$maxInterval);
+
+            if($expirationDate > new \DateTime())
             {
-                if($form->getData()['newPassword'] === $form->getData()['confirmPassword'])
+
+                if($form->isSubmitted() and $form->isValid())
                 {
-                    $user->setPlainPassword($form->getData()['newPassword']);
-                    $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
-                    $this->em->persist($user);
-                    $this->em->flush();
-                    $this->addFlash(
-                        "success",
-                        "Votre mot de passe a bien été modifié !"
-                    );
-                    return $this->redirectToRoute('app_login');
-                }else{
-                    $this->addFlash(
-                        "failed",
-                        "Champs nouveau mot de passe et confirmer mot de passe différent."
-                    );
+                    if($form->getData()['newPassword'] === $form->getData()['confirmPassword'])
+                    {
+                        $user->setPlainPassword($form->getData()['newPassword']);
+                        $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+                        $this->em->persist($user);
+                        $this->em->flush();
+                        $this->addFlash(
+                            "success",
+                            "Votre mot de passe a bien été modifié !"
+                        );
+                        return $this->redirectToRoute('app_login');
+                    }else{
+                        $this->addFlash(
+                            "failed",
+                            "Champs nouveau mot de passe et confirmer mot de passe différent."
+                        );
+                    }
                 }
+            }else{
+                $this->addFlash(
+                    "failed",
+                    "La durée d'expiration du lien de réinitialisation du mot de passe à expiré. Vous pouvez recommencer la procédure en cliquant sur Mot de passe oublié."
+                );
+                return $this->redirectToRoute('app_login');
             }
         } else {
             return $this->redirectToRoute('app_login');
