@@ -32,37 +32,26 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profil", name="profile")
      * @param Request $request
-     * @param LoggerInterface $logger
-     * @param UserPasswordEncoderInterface $passwordEncoder
      * @return Response
      */
-    public function profile(Request $request, LoggerInterface $logger,  UserPasswordEncoderInterface $passwordEncoder): Response
+    public function profile(Request $request): Response
     {
         $user = $this->getUser();
 
-        $editProfileForm = $this->createForm(EditProfileType::class, $user);
+        $editProfileForm = $this->createForm(EditProfileType::class, $user,[
+            'action' => $this->generateUrl('edit_profile'),
+        ]);
         $editProfileForm->handleRequest($request);
 
-        $formPassword = $this->createForm(ChangePasswordType::class);
+        $formPassword = $this->createForm(ChangePasswordType::class, null,[
+            'action' => $this->generateUrl('change_password'),
+        ]);
         $formPassword->handleRequest($request);
 
-        $formAvatar = $this->createForm(EditProfilePictureType::class);
+        $formAvatar = $this->createForm(EditProfilePictureType::class, null,[
+            'action' => $this->generateUrl('change_avatar'),
+        ]);
         $formAvatar->handleRequest($request);
-
-        if($editProfileForm->isSubmitted() and $editProfileForm->isValid())
-        {
-            $this->em->flush();
-        }
-
-        if($formPassword->isSubmitted() and $formPassword->isValid())
-        {
-            $this->changePassword($formPassword, $user, $passwordEncoder);
-        }
-
-        if($formAvatar->isSubmitted() and $formAvatar->isValid())
-        {
-            $this->changeAvatar($formAvatar, $user, $logger);
-        }
 
         $trickRepository = $this->em->getRepository(Trick::class);
         $tricksNumber = $trickRepository->getTricksNumberByUser($user);
@@ -84,60 +73,112 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    private function changePassword($formPassword, $user, $passwordEncoder)
+    /**
+     * @Route("/editProfile", name="edit_profile")
+     * @param Request $request
+     * @return Response
+     */
+    public function editProfile(Request $request) :Response
     {
-        if(password_verify($formPassword->getData()['currentPassword'], $user->getPassword()) === true)
-        {
-            if($formPassword->getData()['newPassword'] === $formPassword->getData()['confirmPassword'])
-            {
-                $user->setPlainPassword($formPassword->getData()['newPassword']);
-                $user->setPassword($passwordEncoder->encodePassword($user, $user->getPlainPassword()));
-                $this->em->persist($user);
-                $this->em->flush();
+        $user = $this->getUser();
 
-                $this->addFlash(
-                    "success",
-                    "Votre mot de passe a bien été modifié."
-                );
-            }else
-            {
-                $this->addFlash(
-                    "failed",
-                    "Champs nouveau mot de passe et confirmer mot de passe différent."
-                );
-            }
-        }else{
-            $this->addFlash(
-                "failed",
-                "Votre mot de passe actuel ne correpond pas."
-            );
+        $editProfileForm = $this->createForm(EditProfileType::class, $user);
+        $editProfileForm->handleRequest($request);
+
+        if($editProfileForm->isSubmitted() and $editProfileForm->isValid())
+        {
+            $this->em->flush();
         }
+
+        return $this->redirectToRoute('profile');
     }
 
-    private function changeAvatar($formAvatar, $user, $logger)
+    /**
+     * @Route("/changePassword", name="change_password")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return Response
+     */
+    public function changePassword(UserPasswordEncoderInterface $passwordEncoder, Request $request) :Response
     {
-        $safeFilename = str_replace(' ','', $formAvatar->getData()['avatar']->getClientOriginalName());
+        $user = $this->getUser();
 
-        //remove old picture
-        $filesystem = new Filesystem();
-        $filesystem->remove('images/profile_picture/'.$user->getId().'/'.$user->getprofilePictureFileName());
+        $formPassword = $this->createForm(ChangePasswordType::class);
+        $formPassword->handleRequest($request);
 
-        $user->setprofilePictureFileName($safeFilename);
-        $this->em->persist($user);
-        $this->em->flush();
+        if($formPassword->isSubmitted() and $formPassword->isValid()) {
 
-        try {
-            $formAvatar->getData()['avatar']->move(
-                'images/profile_picture/'.$user->getId(),
-                $safeFilename
-            );
-        } catch (FileException $e) {
-            $logger->error('erreur changement d\'avatar => upload du fichier '.$safeFilename.' échoué pour l\'utilisateur '.$user->getId());
-            $this->addFlash(
-                "failed",
-                "Le site a rencontré un problème, votre avatar n'a pas pu être téléchargé."
-            );
+            if (password_verify($formPassword->getData()['currentPassword'], $user->getPassword()) === true) {
+                if ($formPassword->getData()['newPassword'] === $formPassword->getData()['confirmPassword']) {
+                    $user->setPlainPassword($formPassword->getData()['newPassword']);
+                    $user->setPassword($passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+                    $this->em->persist($user);
+                    $this->em->flush();
+
+                    $this->addFlash(
+                        "success",
+                        "Votre mot de passe a bien été modifié."
+                    );
+
+                    $this->redirectToRoute('profile');
+
+                } else {
+                    $this->addFlash(
+                        "failed",
+                        "Champs nouveau mot de passe et confirmer mot de passe différent."
+                    );
+                }
+            } else {
+                $this->addFlash(
+                    "failed",
+                    "Votre mot de passe actuel ne correpond pas."
+                );
+            }
         }
+
+        return $this->redirectToRoute('profile');
+    }
+
+    /**
+     * @Route("/changeAvatar", name="change_avatar")
+     * @param LoggerInterface $logger
+     * @param Request $request
+     * @return Response
+     */
+    public function changeAvatar( LoggerInterface $logger, Request $request): Response
+    {
+        $user = $this->getUser();
+
+        $formAvatar = $this->createForm(EditProfilePictureType::class);
+        $formAvatar->handleRequest($request);
+
+        if($formAvatar->isSubmitted() and $formAvatar->isValid()) {
+
+            $safeFilename = str_replace(' ', '', $formAvatar->getData()['avatar']->getClientOriginalName());
+
+            //remove old picture
+            $filesystem = new Filesystem();
+            $filesystem->remove('images/profile_picture/' . $user->getId() . '/' . $user->getprofilePictureFileName());
+
+            $user->setprofilePictureFileName($safeFilename);
+            $this->em->persist($user);
+            $this->em->flush();
+
+            try {
+                $formAvatar->getData()['avatar']->move(
+                    'images/profile_picture/' . $user->getId(),
+                    $safeFilename
+                );
+            } catch (FileException $e) {
+                $logger->error('erreur changement d\'avatar => upload du fichier ' . $safeFilename . ' échoué pour l\'utilisateur ' . $user->getId());
+                $this->addFlash(
+                    "failed",
+                    "Le site a rencontré un problème, votre avatar n'a pas pu être téléchargé."
+                );
+            }
+        }
+
+        return $this->redirectToRoute('profile');
     }
 
 }
