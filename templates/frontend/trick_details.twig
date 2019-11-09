@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{trick.name}}{% endblock %}
+
+{% block content %}
+
+    <img id="td_bg" class="w-100" src="{{ asset('images/trick/trickdefaultcover.jpg') }}">
+
+        <div style="max-width:1250px;" class="shadow container border mt-lg-5 mb-5 p-0 bg-light">
+
+            <div class="position-relative">
+            {% if trick.images.first is not empty %}
+                <img id="trick_img" style="width:100% ;height:auto;" src="{{ asset('images/trick/') ~ trick.id ~'/'~ trick.images.first.filename }}">
+            {% else %}
+                <img id="trick_img" style="width:100% ;height:auto;" src="{{ asset('images/trick/default.png') }}">
+            {% endif %}
+
+                <h1 id="trick_title" class="m-auto font-weight-bold text-center align-middle">{{ trick.name }}</h1>
+            </div>
+
+            {% for message in app.flashes('success') %}
+            <div class="container-flex mr-3 ml-3 mt-2 text-center alert alert-success">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            <div id="show_medias" class="text-center mt-3">
+                <button onclick="showMedias()" type="button" class="btn-lg btn-primary">Voir médias</button>
+            </div>
+
+            <div id="medias" class="container-fluid d-flex mt-2 justify-content-md-between flex-wrap justify-content-center">
+                {% for image in trick.images %}
+                    {% if loop.index > 1 %}
+                        <div class="mt-2 shadow" style="width:300px; height:190px;">
+                            <img class="w-100 h-100" src="{{ asset('images/trick/' ~ trick.id ~'/'~ image.filename) }}">
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+                {% for video in trick.videos %}
+                        <div class="mt-2 shadow" style="width:300px; height:190px;">
+                            {{ video.iframe |raw }}
+                        </div>
+                {% endfor %}
+            </div>
+
+            {% if trick.author == app.user %}
+            <div class="text-right mt-4 mr-4">
+                <a href="{{ path('edit_trick',{ 'trick_name': trick.name } ) }}"><button type="button" class="btn-lg btn-info">Éditer le trick</button></a>
+            </div>
+            {% endif %}
+
+            <div class="mt-4 container text-justify">
+                <h2>Description</h2>
+                {{ trick.description |nl2br}}
+            </div>
+
+
+            <div class="container-fluid mt-5 align-items-center justify-content-center row m-0 ">
+                        <div class="p-2 mr-2 mb-2 rounded bg-primary text-white">Groupe : {{ trick.category }}</div>
+                        <div class="p-2 mr-2 mb-2 rounded bg-primary text-white">Difficulté :
+                            {% for i in 0..4 %}
+                                {% if i < trick.difficulty %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Auteur : {{ trick.author.username }}</div>
+                        <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Créé le {{ trick.creationDate|date("m/d/Y") }}</div>
+                        {% if trick.updateDate is not empty %}
+                            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Modifié le {{ trick.updateDate|date("m/d/Y") }}</div>
+                        {% endif %}
+            </div>
+
+        </div>
+
+        <script>
+            function showMedias(){
+                document.getElementById('medias').style.cssText = "display:flex !important";
+            }
+        </script>
+{% endblock %}
