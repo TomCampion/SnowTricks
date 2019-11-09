@@ -52,14 +52,16 @@ class TrickType extends AbstractType
             ->add('videos', CollectionType::class, [
                 'label' => false,
                 'entry_type' => VideoType::class,
+                'by_reference' => false,
                 'entry_options' => ['label' => false],
-                'allow_add' => true,
+                'allow_add' => true
             ])
             ->add('images', CollectionType::class, [
                 'label' => false,
                 'entry_type' => ImageType::class,
+                'by_reference' => false,
                 'entry_options' => ['label' => false],
-                'allow_add' => true,
+                'allow_add' => true
             ])
         ;
     }

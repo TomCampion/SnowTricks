@@ -16,10 +16,6 @@ class EditProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class, [
-                'empty_data' => '',
-                'label' => "Nom d'utilisateur",
-            ])
             ->add('email', EmailType::class, [
                 'empty_data' => '',
                 'label' => 'Adresse email *'

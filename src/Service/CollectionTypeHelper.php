@@ -29,7 +29,6 @@ class CollectionTypeHelper
             if(!empty($value['filename']->getData())) {
                 $safeFilename = str_replace(' ', '', $value['filename']->getData()->getClientOriginalName());
                 $image->setFilename($safeFilename);
-                $image->setTrick($trick);
 
                 $this->em->persist($image);
 
@@ -42,23 +41,4 @@ class CollectionTypeHelper
         return $tabFiles;
     }
 
-    public function persistVideosCollectionTypeForm(Trick $trick, $form)
-    {
-
-        foreach ($form['videos'] as $key => $value){
-
-            $video = $value->getData();
-
-            if(!empty($value['iframe']->getData())) {
-
-                $video->setIframe($value['iframe']->getData());
-                $video->setTrick($trick);
-
-                $this->em->persist($video);
-            }else{
-                $trick->removeVideo($video);
-            }
-        }
-
-    }
 }

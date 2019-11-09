@@ -17,7 +17,8 @@ class VideoType extends AbstractType
     {
         $builder->add('iframe', TextType::class, [
             'label' => false,
-            'required' => false,
+            'required' => true,
+            'attr' => ['placeholder' => 'Collez ici une balise embed'],
             'constraints' => new Regex([
                 'pattern' => "#<iframe(.+)</iframe>#",
                 'message' => 'Votre video doit être entre deux balises <iframe>'
