@@ -16,6 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProfileController extends AbstractController
 {
@@ -32,9 +34,10 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profil", name="profile")
      * @param Request $request
+     * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function profile(Request $request): Response
+    public function profile(Request $request, ValidatorInterface $validator): Response
     {
         $user = $this->getUser();
 
@@ -69,7 +72,7 @@ class ProfileController extends AbstractController
             'trickNumber' => $tricksNumber,
             'commentNumber' => $commentNumber,
             'tricks' => $tricks,
-            'comments' => $comments
+            'comments' => $comments,
         ]);
     }
 
@@ -80,14 +83,16 @@ class ProfileController extends AbstractController
      */
     public function editProfile(Request $request) :Response
     {
+
         $user = $this->getUser();
+
 
         $editProfileForm = $this->createForm(EditProfileType::class, $user);
         $editProfileForm->handleRequest($request);
 
         if($editProfileForm->isSubmitted() and $editProfileForm->isValid())
         {
-            $this->em->flush();
+           $this->em->flush();
         }
 
         return $this->redirectToRoute('profile');
@@ -110,8 +115,8 @@ class ProfileController extends AbstractController
 
             if (password_verify($formPassword->getData()['currentPassword'], $user->getPassword()) === true) {
                 if ($formPassword->getData()['newPassword'] === $formPassword->getData()['confirmPassword']) {
-                    $user->setPlainPassword($formPassword->getData()['newPassword']);
-                    $user->setPassword($passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+                    $plainPassword = $user->getPassword();
+                    $user->setPassword($passwordEncoder->encodePassword($user, $plainPassword));
                     $this->em->persist($user);
                     $this->em->flush();
 

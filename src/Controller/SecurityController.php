@@ -56,7 +56,8 @@ class SecurityController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $token = new Token();
             $token->setValue($this->generateUniqueToken());
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+            $plainPassword = $user->getPassword();
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $plainPassword));
             $user->setConfirmationToken($token);
             $this->em->persist($user);
             $this->em->flush();
@@ -102,7 +103,7 @@ class SecurityController extends AbstractController
         $tokenExist = $user->getConfirmationToken()->getValue();
         if($token === $tokenExist) {
             $user->setIsActive(true);
-            $user->getConfirmationToken()->setValue('');
+            $this->em->getRepository(Token::class)->setNullValue($user->getConfirmationToken()->getId());
             $this->em->persist($user);
             $this->em->flush();
 
@@ -113,7 +114,7 @@ class SecurityController extends AbstractController
 
             return $this->redirectToRoute('app_login');
         } else {
-            return $this->render('frontend/login.twig');
+            return $this->redirectToRoute('app_login');
         }
     }
 
@@ -219,8 +220,8 @@ class SecurityController extends AbstractController
                 {
                     if($form->getData()['newPassword'] === $form->getData()['confirmPassword'])
                     {
-                        $user->setPlainPassword($form->getData()['newPassword']);
-                        $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+                        $plainPassword = $user->getPassword();
+                        $user->setPassword($this->passwordEncoder->encodePassword($user, $plainPassword));
                         $this->em->persist($user);
                         $this->em->flush();
                         $this->addFlash(

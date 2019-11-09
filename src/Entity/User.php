@@ -55,9 +55,15 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
+     * * @Assert\Length(
+     *      min = 4,
+     *      max = 255,
+     *      minMessage = "Votre mot de passe doit faire au moins {{ limit }} caractères",
+     *      maxMessage = "Votre mot de passe ne doit pas excéder {{ limit }} caractères"
+     * )
      * @ORM\Column(type="string")
      */
-    private $password;
+    private $password ='';
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
@@ -116,22 +122,6 @@ class User implements UserInterface
      * @ORM\OneToOne(targetEntity="App\Entity\token", cascade={"persist", "remove"})
      */
     private $passwordToken;
-
-    /**
-     * * @Assert\NotNull(
-     *     message= "Vous devez renseigner un mot de passe"
-     * )
-     * @Assert\NotBlank(
-     *     message= "Vous devez renseigner un mot de passe"
-     * )
-     * @Assert\Length(
-     *      min = 4,
-     *      max = 50,
-     *      minMessage = "Votre mot de passe doit faire au moins {{ limit }} caractères",
-     *      maxMessage = "Votre mot de passe ne doit pas excéder {{ limit }} caractères"
-     * )
-     */
-    private $plainPassword;
 
     public function __construct()
     {
