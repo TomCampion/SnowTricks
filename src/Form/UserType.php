@@ -23,8 +23,9 @@ class UserType extends AbstractType
                 'empty_data' => '',
                 'label' => 'Nom d\'utilisateur *'
             ])
-            ->add('plainPassword', PasswordType::class, [
-                'label' => 'Mot de passe *'
+            ->add('Password', PasswordType::class, [
+                'label' => 'Mot de passe *',
+                'required' => true
             ])
         ;
     }
