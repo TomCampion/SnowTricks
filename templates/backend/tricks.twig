@@ -35,7 +35,7 @@
                 </thead>
                 <tbody>
                 {% for trick in tricks %}
-                    <tr>
+                    <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_name':trick.name}) }}' " >
                         <td>{{ trick.id }}</td>
                         <td>{{ trick.name }}</td>
                         <td>{{ trick.description|length > 270 ? trick.description|slice(0, 270) ~ '...' : trick.description  }}</td>

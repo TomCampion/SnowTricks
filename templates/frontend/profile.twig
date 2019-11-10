@@ -16,21 +16,14 @@
                                     <div class="e-profile">
                                         <div class="row">
                                             <div class="col-12 col-sm-auto mb-3">
-                                                <div class="mx-auto" style="width: 140px;">
-                                                    <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px;
-                                                            {% if app.user.profilePictureFileName is empty%}
-                                                                background-image: url('{{ asset('images/profile_picture/default.png') }}');
-                                                            {% else %}
-                                                                background-image: url('{{ asset('images/profile_picture/' ~ app.user.id ~'/'~ app.user.profilePictureFileName) }}');
-                                                            {%  endif %}
-                                                            background-size: cover;">
-                                                    </div>
+                                                <div class="mx-auto" style="width: 140px; height: 140px;">
+                                                    <img class="w-100 h-100 rounded-circle" src="{{ asset('images/profile_picture/' ~ app.user.id ~'/'~ app.user.profilePictureFileName) }}">
                                                 </div>
                                             </div>
                                             <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
                                                 <div class="text-center text-sm-left mb-2 mb-sm-0">
                                                     <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{app.user.username}}</h4>
-                                                    <div class="mt-5">
+                                                    <div id="change-avatar" class="mt-5">
                                                         <button class="btn btn-primary" type="button">
                                                             <i class="fa fa-fw fa-camera"></i>
                                                             {{ form_start(formAvatar) }}
@@ -66,9 +59,10 @@
                                                             <div class="col pr-5">
                                                                 <div class="mb-2"><b>Informations</b></div>
                                                                     <div class="form-group">
+
                                                                         {{ form_start(form) }}
                                                                             {{ form_rest(form) }}
-                                                                            <button class="btn btn-primary" type="submit">Changer de pseudo</button>
+                                                                            <button class="btn btn-primary" type="submit">Enregistrer</button>
                                                                         {{ form_end(form) }}
                                                                     </div>
                                                                 <div class="row">
@@ -140,11 +134,19 @@
                                                     </thead>
                                                     <tbody>
                                                         {% for trick in tricks %}
-                                                                <tr>
+                                                                <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_name':trick.name}) }}' ">
                                                                     <td>{{ trick.name }}</td>
-                                                                    <td>{{ trick.description }}</td>
+                                                                    <td>{{ trick.description|length > 150 ? trick.description|slice(0, 170) ~ '...' : trick.description  }}</td>
                                                                     <td>{{ trick.category }}</td>
-                                                                    <td>{{ trick.difficulty }}</td>
+                                                                    <td style="min-width: 132px;">
+                                                                        {% for i in 0..4 %}
+                                                                            {% if i < trick.difficulty %}
+                                                                                <i class="fas fa-star"></i>
+                                                                            {% else %}
+                                                                                <i class="far fa-star"></i>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    </td>
                                                                     <td>{{ trick.creationDate|date("m/d/Y") }}</td>
                                                                     <td>{{trick.updateDate ? trick.updateDate|date("d/m/Y")}}</td>
                                                                 </tr>
