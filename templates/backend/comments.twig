@@ -1,0 +1,43 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Commentaires{% endblock %}
+
+{% block content %}
+    <section class="flex-column">
+
+        <h1 class="mt-5 text-center">Commentaires</h1>
+
+        {% for message in app.flashes('success') %}
+            <div class="custom_container mt-3 container alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="mt-5 container-fluid border form-group d-flex align-items-center flex-column justify-content-around">
+
+            <table class="bg-light table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Trick</th>
+                    <th scope="col">Commentaire</th>
+                    <th scope="col">Date de création</th>
+                    <th scope="col">Date de modification</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for comment in comments %}
+                    <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_name':comment.trick.name}) }}' ">
+                        <td>{{ comment.trick.name }}</td>
+                        <td>{{ comment.content }}</td>
+                        <td>{{ comment.creationDate|date("m/d/Y H:i") }}</td>
+                        <td>{{comment.updateDate ? comment.updateDate|date("d/m/Y H:i")}}</td>
+                        <td><a class="text-white" href="{{ path('delete_comment',{ 'comment_id': comment.id } ) }}"><button type="button" class="btn btn-danger">Supprimer</button></a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+{% endblock %}
