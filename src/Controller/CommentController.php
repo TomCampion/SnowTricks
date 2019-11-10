@@ -22,21 +22,41 @@ class CommentController extends AbstractController
      */
     private $em;
 
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authChecker;
 
-    public function __construct(ObjectManager $em)
+    public function __construct(ObjectManager $em, AuthorizationCheckerInterface $authChecker)
     {
         $this->em = $em;
+        $this->authChecker = $authChecker;
+    }
+
+
+    /**
+     * @Route("/admin/comments", name="admin_comments")
+     * @return Response
+     */
+    public function ShowTricks(): Response
+    {
+        $comments = $this->em->getRepository(Comment::class)->findAll();
+
+        return $this->render('backend/comments.twig',[
+            'comments' => $comments
+        ]);
     }
 
     /**
      * @Route("/tricks/add_comment/{trick_id}", name="add_comment")
      * @param Request $request
-     * @param $image_id
+     * @param $trick_id
+     * @param AuthorizationCheckerInterface $authChecker
      * @return Response
      */
-    public function addComment(Request $request, $trick_id, AuthorizationCheckerInterface $authChecker): Response
+    public function addComment(Request $request, $trick_id): Response
     {
-        if (false === $authChecker->isGranted('ROLE_USER')) {
+        if (false === $this->authChecker->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('home');
         }
 
@@ -64,4 +84,31 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
     }
 
+    /**
+     * @Route("/tricks/delete_comment/{comment_id}", name="delete_comment")
+     * @param Request $request
+     * @param $comment_id
+     * @return Response
+     */
+    public function deleteComment(Request $request, $comment_id): Response
+    {
+        $comment = $this->em->getRepository(Comment::class)->findOneBy(['id' => $comment_id]);
+        $trick = $comment->getTrick();
+
+        if($this->authChecker->isGranted('ROLE_ADMIN') === false){
+            if(empty($trick) or $trick->getAuthor() !== $this->getUser()){
+                $this->redirectToRoute('home');
+            }
+        }
+
+        $this->em->remove($comment);
+        $this->em->flush();
+
+        $this->addFlash(
+            "success",
+            "Commentaire supprimé !"
+        );
+
+        return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
+    }
 }
