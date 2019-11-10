@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\Trick;
 use App\Entity\Video;
 use App\Form\VideoType;
+use App\Service\AccesHelper;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +21,15 @@ class VideoController extends AbstractController
      */
     private $em;
 
+    /**
+     * @var AccesHelper
+     */
+    private $accesHelper;
 
-    public function __construct(ObjectManager $em)
+    public function __construct(ObjectManager $em, AccesHelper $accesHelper)
     {
         $this->em = $em;
+        $this->accesHelper = $accesHelper;
     }
 
     /**
@@ -36,8 +42,8 @@ class VideoController extends AbstractController
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['id' => $trick_id]);
 
-        if($trick->getAuthor() != $this->getUser() ){
-            return $this->redirectToRoute('home');
+        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+            $this->redirectToRoute('home');
         }
 
         $videoForm = $this->createForm(VideoType::class);
@@ -73,8 +79,8 @@ class VideoController extends AbstractController
         $video = $this->em->getRepository(Video::class)->findOneBy(['id' => $video_id]);
         $trick = $video->getTrick();
 
-        if($trick->getAuthor() != $this->getUser() ){
-            return $this->redirectToRoute('home');
+        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+            $this->redirectToRoute('home');
         }
 
         $videoForm = $this->createForm(VideoType::class);
@@ -106,8 +112,8 @@ class VideoController extends AbstractController
         $video = $this->em->getRepository(Video::class)->findOneBy(['id' => $video_id]);
         $trick = $video->getTrick();
 
-        if($trick->getAuthor() != $this->getUser() ){
-            return $this->redirectToRoute('home');
+        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+            $this->redirectToRoute('home');
         }
 
         $this->em->remove($video);
