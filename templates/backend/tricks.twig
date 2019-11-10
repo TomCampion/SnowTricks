@@ -1,0 +1,55 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Tricks{% endblock %}
+
+{% block content %}
+    <section class="flex-column">
+
+        <h1 class="mt-5 text-center">Tricks</h1>
+
+        <div class="text-right container mb-4">
+            <button type="button" class="btn-lg btn-info"><a class="text-white" href="{{ path('add_trick') }}">Ajouter un trick</a></button>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="custom_container mt-3 container alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="container-fluid border form-group d-flex align-items-center flex-column justify-content-around">
+
+            <table class="bg-light table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Catégorie</th>
+                    <th scope="col">Difficulté</th>
+                    <th scope="col">Date de création</th>
+                    <th scope="col">Date de modification</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for trick in tricks %}
+                    <tr>
+                        <td>{{ trick.id }}</td>
+                        <td>{{ trick.name }}</td>
+                        <td>{{ trick.description|length > 270 ? trick.description|slice(0, 270) ~ '...' : trick.description  }}</td>
+                        <td>{{ trick.category }}</td>
+                        <td>{{ trick.difficulty }}</td>
+                        <td>{{ trick.creationDate|date("m/d/Y") }}</td>
+                        <td>{{trick.updateDate ? trick.updateDate|date("d/m/Y")}}</td>
+                        <td><a class="text-white" href="{{ path('edit_trick',{ 'trick_name': trick.name } ) }}"><button type="button" class="btn btn-primary">Editer</button></a></td>
+                        <td><a onclick="return confirm('Etes-vous sûr de vouloir supprimer ce trick ?')" class="text-white" href="{{ path('delete_trick',{ 'trick_id': trick.id } ) }}"><button type="button" class="btn btn-danger">Supprimer</button></a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+{% endblock %}
