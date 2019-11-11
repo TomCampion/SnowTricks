@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -256,6 +257,45 @@ class SecurityController extends AbstractController
     public function logout()
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+
+    /**
+     * @Route("/admin/users", name="admin_users")
+     * @return Response
+     */
+    public function ShowUsers(): Response
+    {
+        $users = $this->em->getRepository(User::class)->findAll();
+
+        return $this->render('backend/users.twig',[
+            'users' => $users
+        ]);
+    }
+
+    /**
+     * @Route("/users/ban_user/{user_id}", name="ban_user")
+     * @param $user_id
+     * @param AuthorizationCheckerInterface $authChecker
+     * @return Response
+     */
+    public function banUser($user_id, AuthorizationCheckerInterface $authChecker): Response
+    {
+        $user = $this->em->getRepository(User::class)->findOneBy(['id' => $user_id]);
+
+        if($authChecker->isGranted('ROLE_ADMIN') === false){
+            $this->redirectToRoute('home');
+        }
+
+        $user->setBan(true);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        $this->addFlash(
+            "success",
+            "Utilisateur banni !"
+        );
+
+        return $this->redirectToRoute('admin_users');
     }
 
     private function generateUniqueToken()
