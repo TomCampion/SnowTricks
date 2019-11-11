@@ -1,0 +1,55 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block content %}
+<section class="flex-column">
+
+    <h1 class="mt-5 text-center">Utilisateurs</h1>
+
+    {% for message in app.flashes('success') %}
+    <div class="custom_container mt-3 container alert alert-success">
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    <div class="mt-5 container-fluid border form-group d-flex align-items-center flex-column justify-content-around">
+
+        <table class="bg-light table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Rôle</th>
+                <th scope="col">Ban</th>
+                <th scope="col">Active</th>
+                <th scope="col">Créé le</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email}}</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <td>Administrateur</td>
+                {% elseif is_granted('ROLE_USER') %}
+                    <td>Utilisateur</td>
+                {% else %}
+                    <td>Anonyme</td>
+                {% endif %}
+                <td>{{ user.ban|number_format  }}</td>
+                <td>{{ user.IsActive|number_format }}</td>
+                <td>{{ user.creationDate|date("m/d/Y H:i") }}</td>
+                <td><a class="text-white" href="{{ path('ban_user',{ 'user_id': user.id } ) }}"><button type="button" class="btn btn-danger">Bannir</button></a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</section>
+{% endblock %}
