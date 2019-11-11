@@ -35,15 +35,26 @@ class CommentController extends AbstractController
 
 
     /**
-     * @Route("/admin/comments", name="admin_comments")
+     * @Route("/admin/comments/{page}", name="admin_comments")
+     * @param int $page
      * @return Response
      */
-    public function ShowTricks(): Response
+    public function ShowTricks(int $page = 1): Response
     {
-        $comments = $this->em->getRepository(Comment::class)->findAll();
+        $nbCommentsByPage = getenv('MAX_ELEMENTS_PAR_PAGE_ADMIN');
+
+        $comments = $this->em->getRepository(Comment::class)->findAllPaginate($page, $nbCommentsByPage);
+
+        $pagination = array(
+            'page' => $page,
+            'nbPages' => ceil(count($comments) / $nbCommentsByPage),
+            'nomRoute' => 'admin_users',
+            'paramsRoute' => array()
+        );
 
         return $this->render('backend/comments.twig',[
-            'comments' => $comments
+            'comments' => $comments,
+            'pagination' => $pagination
         ]);
     }
 
@@ -86,11 +97,10 @@ class CommentController extends AbstractController
 
     /**
      * @Route("/tricks/delete_comment/{comment_id}", name="delete_comment")
-     * @param Request $request
      * @param $comment_id
      * @return Response
      */
-    public function deleteComment(Request $request, $comment_id): Response
+    public function deleteComment($comment_id): Response
     {
         $comment = $this->em->getRepository(Comment::class)->findOneBy(['id' => $comment_id]);
         $trick = $comment->getTrick();
@@ -111,4 +121,5 @@ class CommentController extends AbstractController
 
         return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
     }
+
 }
