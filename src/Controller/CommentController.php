@@ -39,7 +39,7 @@ class CommentController extends AbstractController
      * @param int $page
      * @return Response
      */
-    public function ShowTricks(int $page = 1): Response
+    public function ShowComments(int $page = 1): Response
     {
         $nbCommentsByPage = getenv('MAX_ELEMENTS_PAR_PAGE_ADMIN');
 
@@ -48,7 +48,7 @@ class CommentController extends AbstractController
         $pagination = array(
             'page' => $page,
             'nbPages' => ceil(count($comments) / $nbCommentsByPage),
-            'nomRoute' => 'admin_users',
+            'nomRoute' => 'admin_comments',
             'paramsRoute' => array()
         );
 

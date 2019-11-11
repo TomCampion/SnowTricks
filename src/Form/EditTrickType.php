@@ -44,7 +44,7 @@ class EditTrickType extends AbstractType
                     new Range([
                         'min' => 1,
                         'max' => 5,
-                        'minMessage' => 'La difficultédoit valoir au minimum {{ limit }}',
+                        'minMessage' => 'La difficulté doit valoir au minimum {{ limit }}',
                         'maxMessage' => 'La difficulté ne doit pas excéder {{ limit }} '
                     ])
                 ]

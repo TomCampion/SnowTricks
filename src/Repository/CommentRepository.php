@@ -35,7 +35,7 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère une liste d'articles triés et paginés.
+     * Récupère une liste de commentaires triés et paginés.
      *
      * @param int $page Le numéro de la page
      * @param int $nbMaxParPage Nombre maximum d'article par page

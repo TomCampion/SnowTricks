@@ -23,7 +23,7 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère une liste d'articles triés et paginés.
+     * Récupère une liste d'utilisateurs triés et paginés.
      *
      * @param int $page Le numéro de la page
      * @param int $nbMaxParPage Nombre maximum d'article par page
