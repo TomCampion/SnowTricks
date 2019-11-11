@@ -34,12 +34,15 @@
                         <td>{{ comment.content }}</td>
                         <td>{{ comment.creationDate|date("m/d/Y H:i") }}</td>
                         <td>{{comment.updateDate ? comment.updateDate|date("d/m/Y H:i")}}</td>
-                        <td><a class="text-white" href="{{ path('delete_comment',{ 'comment_id': comment.id } ) }}"><button type="button" class="btn btn-danger">Supprimer</button></a></td>
+                        <td><a onclick="return confirm('Etes-vous sûr de vouloir supprimer ce commentaire ?')" class="text-white" href="{{ path('delete_comment',{ 'comment_id': comment.id } ) }}"><button type="button" class="btn btn-danger">Supprimer</button></a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
 
         </div>
+
+        {% include 'Pagination.twig' %}
+
     </section>
 {% endblock %}
