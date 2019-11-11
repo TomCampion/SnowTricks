@@ -18,6 +18,7 @@
             <table class="bg-light table table-striped">
                 <thead>
                 <tr>
+                    <th scope="col">ID</th>
                     <th scope="col">Trick</th>
                     <th scope="col">Commentaire</th>
                     <th scope="col">Date de création</th>
@@ -28,6 +29,7 @@
                 <tbody>
                 {% for comment in comments %}
                     <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_name':comment.trick.name}) }}' ">
+                        <td>{{ comment.id }}</td>
                         <td>{{ comment.trick.name }}</td>
                         <td>{{ comment.content }}</td>
                         <td>{{ comment.creationDate|date("m/d/Y H:i") }}</td>
