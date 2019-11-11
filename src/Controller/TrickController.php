@@ -38,15 +38,25 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/admin/tricks/{page}", name="admin")
      * @return Response
      */
-    public function ShowTricks(): Response
+    public function ShowTricks(int $page = 1): Response
     {
-        $tricks = $this->em->getRepository(Trick::class)->findAll();
+        $nbTricksByPage = getenv('MAX_ELEMENTS_PAR_PAGE_ADMIN');
+
+        $tricks = $this->em->getRepository(Trick::class)->findAllPaginate($page, $nbTricksByPage);
+
+        $pagination = array(
+            'page' => $page,
+            'nbPages' => ceil(count($tricks) / $nbTricksByPage),
+            'nomRoute' => 'admin',
+            'paramsRoute' => array()
+        );
 
         return $this->render('backend/tricks.twig',[
-            'tricks' => $tricks
+            'tricks' => $tricks,
+            'pagination' => $pagination
         ]);
     }
 
