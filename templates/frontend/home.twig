@@ -26,6 +26,7 @@
 
             {%  include 'frontend/trick.twig' with {'tricks': tricks_15} %}
 
+        {% if tricks|length > 15 %}
         <div id="tricks_end" class="container-fluid text-center mb-4">
             <button id="show_more" onclick="showMore()" type="button" class="btn btn-primary">Voir plus</button>
             {% if app.user %}
@@ -33,9 +34,9 @@
             {% endif %}
                 <a href="#tricks"><i id="arrow_up" class="text-dark fas fa-arrow-up"></i></a>
         </div>
+        {% endif %}
 
         </div>
-
     </div>
 
     <script>

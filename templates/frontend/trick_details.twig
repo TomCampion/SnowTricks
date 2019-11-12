@@ -44,7 +44,7 @@
                 {% endfor %}
             </div>
 
-            {% if trick.author == app.user %}
+            {% if trick.author == app.user or is_granted('ROLE_ADMIN') %}
             <div class="text-right mt-4 mr-4">
                 <a href="{{ path('edit_trick',{ 'trick_name': trick.name } ) }}"><button type="button" class="btn-lg btn-info">Éditer le trick</button></a>
             </div>
@@ -68,9 +68,9 @@
                             {% endfor %}
                         </div>
                         <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Auteur : {{ trick.author.username }}</div>
-                        <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Créé le {{ trick.creationDate|date("m/d/Y") }}</div>
-                        {% if trick.updateDate is not empty %}
-                            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Modifié le {{ trick.updateDate|date("m/d/Y") }}</div>
+                        <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Créé le {{ trick.creationDate|date("d/m/Y") }}</div>
+                        {% if trick.updateDate is not empty and trick.updateDate > trick.creationDate %}
+                            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Modifié le {{ trick.updateDate|date("d/m/Y") }}</div>
                         {% endif %}
             </div>
             <hr class="mr-4 ml-4">
@@ -85,26 +85,18 @@
             <hr class="mr-4 ml-4">
             {% endif %}
 
+            {% set comments_10 = [] %}
             {% for comment in comments %}
-                <div class=" comment container w-75 mt-3 mb-5">
-                    <div class="row">
-                        <div class="commentImg w-100 col-2">
-                            <img class="w-100 h-100 rounded-circle" src="{{ asset('images/profile_picture/'~ comment.author.id ~ '/' ~ comment.author.profilePictureFileName )}}">
-                        </div>
-                        <div class="comments col rounded">
-                            <div class="d-flex justify-content-between">
-                                <h4>{{ comment.author.username }}</h4>
-                                <p class="commentDate font-weight-bold text-sm">{{ comment.creationDate|date("d/m/Y H:i") }}</p>
-                            </div>
-                            {{ comment.content }}
-                        </div>
-                    </div>
-                </div>
+                {% if loop.index <= 10 %}
+                    {% set comments_10 = comments_10|merge([comment]) %}
+                {% endif %}
             {% endfor %}
 
-            {% if comments|length > 5 %}
-                <div class="text-center mb-5">
-                    <button onclick="showMore()" type="button" class="btn-lg btn-primary">Voir plus</button>
+            {% include 'frontend/comment.twig' with {'comments': comments_10} %}
+
+            {% if comments|length > 10 %}
+                <div id="comments_end" class="text-center mb-5">
+                    <button id="show_more" onclick="showMore()" type="button" class="btn-lg btn-primary">Voir plus</button>
                 </div>
             {% endif %}
         </div>
@@ -112,21 +104,34 @@
         <script>
             $('.commentImg').css({'height':$('.commentImg').width()+'px'});
 
-            var commentaires = $('.comment');
-
-            for(i=5; i<commentaires.length; i++){
-                commentaires[i].style.display = "none";
-            }
-
-            function showMore() {
-                var commentaires = $('.comment');
-                for(i=5; i<commentaires.length; i++){
-                    commentaires[i].style.display = "block";
-                }
-            }
-
             function showMedias(){
                 document.getElementById('medias').style.cssText = "display:flex !important";
             }
+
+            function setOffset(){
+                offset = 0
+                for(i =0; i<$('.comment').length; i++ ){
+                    offset++;
+                }
+            }
+            setOffset();
+
+            function showMore() {
+                $.ajax({
+                    url: "{{path('ajax_comments')}}",
+                    type: "POST",
+                    data: {
+                        offset: offset
+                    }}).done(function (data) {
+                    $("#comments_end").before(data);
+                    setOffset();
+                    if(offset >= {{ comments|length }}){
+                        $("#show_more").before("<p class=\"mt-3\">Tous les commentaires sont affichés !</p>");
+                        $("#show_more").remove();
+                    }
+                    $('.commentImg').css({'height':$('.commentImg').width()+'px'});
+                });
+            }
+
         </script>
 {% endblock %}
