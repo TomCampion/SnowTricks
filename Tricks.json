@@ -1,0 +1,116 @@
+{
+  "tricks": [
+    {
+      "name": "Nollie",
+      "description": "A trick in which the snowboarder springs off the nose of the board and into the air.",
+      "category": "flip",
+      "difficulty": 1,
+      "author_id": 26
+    },
+    {
+      "name": "Ollie",
+      "description": "A trick in which the snowboarder springs off the tail of the board and into the air",
+      "category": "flip",
+      "difficulty": 1,
+      "author_id": 26
+    },
+    {
+      "name": "Switch Ollie",
+      "description": "While riding switch, the snowboarder performs an ollie.",
+      "category": "flip",
+      "difficulty": 2,
+      "author_id": 26
+    },
+    {
+      "name": "Fakie ollie (Switch Nollie)",
+      "description": "While riding switch, the snowboarder springs off of their 'new nose' and into the air. This resembles an ollie, but the snowboarder is riding in switch.",
+      "category": "flip",
+      "difficulty": 2,
+      "author_id": 26
+    },
+    {
+      "name": "Shifty",
+      "description": "An aerial trick in which a snowboarder twists their body in order to shift or rotate their board about 90° from its normal position beneath them, and then returns the board to its original position before landing. This trick can be performed frontside or backside, and also in variation with other tricks and spins.",
+      "category": "rotation",
+      "difficulty": 3,
+      "author_id": 26
+    },
+    {
+      "name": "Air-to-fakie",
+      "description": "Airing straight out of a vertical transition (halfpipe, quarterpipe) and then re-entering fakie, without rotation.",
+      "category": "one foot trick",
+      "difficulty": 4,
+      "author_id": 26
+    },
+    {
+      "name": "Bloody Dracula",
+      "description": "A trick in which the rider grabs the tail of the board with both hands. The rear hand grabs the board as it would do it during a regular tail-grab but the front hand blindly reaches for the board behind the riders back.",
+      "category": "grab",
+      "difficulty": 4,
+      "author_id": 26
+    },
+    {
+      "name": "Frontside grab/indy",
+      "description": "A fundamental trick performed by grabbing the toe edge between the bindings with the trailing hand. This trick is referred to as a frontside grab on a straight air, or while performing a frontside spin. When performing a backside aerial or backside rotation, this grab is referred to as an Indy. The frontside air was popularized by skateboarder Tony Alva.",
+      "category": "grab",
+      "difficulty": 3,
+      "author_id": 26
+    },
+    {
+      "name": "Lien air",
+      "description": "When performing a frontside air on transition, the snowboarder grabs heelside in front or behind the leading binding with their leading hand. In order for it to be a Lien air, the board can not be tweaked and has to be kept flat. The origin of the name of the trick is the reverse spelling of skateboarder Neil Blender's first name.",
+      "category": "grab",
+      "difficulty": 5,
+      "author_id": 26
+    },
+    {
+      "name": "Back flip",
+      "description": "Flipping backwards (like a standing backflip) off of a jump.",
+      "category": "flip",
+      "difficulty": 5,
+      "author_id": 26
+    },
+    {
+      "name": "Front flip",
+      "description": "Flipping forward (like a standing frontflip) off of a jump.",
+      "category": "flip",
+      "difficulty": 4,
+      "author_id": 26
+    },
+    {
+      "name": "Haakon flip",
+      "description": "An aerial maneuver performed in a halfpipe by taking off backwards, and performing an inverted 720° rotation. The rotation mimics a half-cab leading to McTwist, and is named after freestyle legend Terje Haakonsen of Norway.",
+      "category": "flip",
+      "difficulty": 5,
+      "author_id": 26
+    },
+    {
+      "name": "Frontside Rodeo",
+      "description": "The basic frontside rodeo is all together a 540. It essentially falls into a grey area between an off axis frontside 540 and a frontside 180 with a back flip blended into it. The grab choice and different line and pop factors can make it more flipy or more of an off-axis spin. Frontside rodeo can be done off the heels or toes and with a little more spin on the Z Axis can go to 720 or 900. It is possible to do it to a 1080 but, if there is too much flip in the spin, it can be hard not to over flip when going past 720 and 900. The bigger the Z Axis spin, the later the inverted part of the rotation should be. Gaining control on big spin rodeos, may lead to a double cork or a second flip rotation in the spin, if the rider has developed a comfort level with double flips on the tramp or other gymnastic environment.;Rodeo flip; frontside rodeo: A frontward-flipping frontside spin done off the toe-edge. Most commonly performed with a 540° rotation, but also performed as a 720°, 900°, etc..",
+      "category": "flip",
+      "difficulty": 5,
+      "author_id": 26
+    },
+    {
+      "name": "Boardslide",
+      "description": "A slide performed where the riders leading foot passes over the rail on approach, with their snowboard traveling perpendicular along the rail or other obstacle.[1] When performing a frontside boardslide, the snowboarder is facing uphill. When performing a backside boardslide, a snowboarder is facing downhill. This is often confusing to new riders learning the trick because with a frontside boardslide you are moving backward and with a backside boardslide you are moving forward.",
+      "category": "slide",
+      "difficulty": 4,
+      "author_id": 26
+    },
+    {
+      "name": "The Gutterball",
+      "description": "The Gutterball is a one footed (front foot is strapped in and the rear foot is unstrapped ) front boardslide with a backhanded seatbelt nose grab, resembling the body position that someone would have after releasing a bowling ball down a bowling ally. This trick was invented and named by Jeremy Cameron which won him a first place in the Morrow Snowboards \"FAME WAR\" Best Trick contest in 2009.",
+      "category": "one foot trick",
+      "difficulty": 4,
+      "author_id": 26
+    },
+    {
+      "name": "Lipslide",
+      "description": "A slide performed where the rider's trailing foot passes over the rail on approach, with their snowboard traveling perpendicular along the rail or other obstacle.[1] When performing a frontside lipslide, the snowboarder is facing downhill. When performing a backside lipslide, a snowboarder is facing uphill.",
+      "category": "one foot trick",
+      "difficulty": 3,
+      "author_id": 26
+    }
+  ]
+}
