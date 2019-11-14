@@ -73,10 +73,58 @@
                             <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Modifié le {{ trick.updateDate|date("m/d/Y") }}</div>
                         {% endif %}
             </div>
+            <hr class="mr-4 ml-4">
 
+            {% if app.user %}
+            <div class="container w-50">
+            {{ form_start(form) }}
+                {{ form_row(form.content, {'attr': {'style':'min-height: auto !important;'}}) }}
+                <button type="submit" class="btn btn-primary">Poster</button>
+            {{ form_end(form) }}
+            </div>
+            <hr class="mr-4 ml-4">
+            {% endif %}
+
+            {% for comment in comments %}
+                <div class=" comment container w-75 mt-3 mb-5">
+                    <div class="row">
+                        <div class="commentImg w-100 col-2">
+                            <img class="w-100 h-100 rounded-circle" src="{{ asset('images/profile_picture/'~ comment.author.id ~ '/' ~ comment.author.profilePictureFileName )}}">
+                        </div>
+                        <div class="comments col rounded">
+                            <div class="d-flex justify-content-between">
+                                <h4>{{ comment.author.username }}</h4>
+                                <p class="commentDate font-weight-bold text-sm">{{ comment.creationDate|date("d/m/Y H:i") }}</p>
+                            </div>
+                            {{ comment.content }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if comments|length > 5 %}
+                <div class="text-center mb-5">
+                    <button onclick="showMore()" type="button" class="btn-lg btn-primary">Voir plus</button>
+                </div>
+            {% endif %}
         </div>
 
         <script>
+            $('.commentImg').css({'height':$('.commentImg').width()+'px'});
+
+            var commentaires = $('.comment');
+
+            for(i=5; i<commentaires.length; i++){
+                commentaires[i].style.display = "none";
+            }
+
+            function showMore() {
+                var commentaires = $('.comment');
+                for(i=5; i<commentaires.length; i++){
+                    commentaires[i].style.display = "block";
+                }
+            }
+
             function showMedias(){
                 document.getElementById('medias').style.cssText = "display:flex !important";
             }

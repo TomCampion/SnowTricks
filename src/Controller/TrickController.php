@@ -3,7 +3,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Video;
+use App\Entity\Comment;
+use App\Form\CommentType;
 use App\Form\ImageType;
 use App\Form\VideoType;
 use App\Service\CollectionTypeHelper;
@@ -56,14 +57,26 @@ class TrickController extends AbstractController
 
     /**
      * @Route("/tricks/{trick_name}", name="trick_details")
+     * @param Request $request
+     * @param $trick_name
      * @return Response
      */
-    public function tricksDetails($trick_name) : Response
+    public function tricksDetails(Request $request, $trick_name) : Response
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['name' => $trick_name]);
+        $comments = $this->em->getRepository(Comment::class)->findBy(['trick' => $trick]);
+
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment,[
+            'action' => $this->generateUrl('add_comment',['trick_id' => $trick->getId()]),
+        ]);
+
+        $form->handleRequest($request);
 
         return $this->render('frontend/trick_details.twig',[
-            'trick' => $trick
+            'trick' => $trick,
+            'comments' => $comments,
+            'form' => $form->createView()
         ]);
     }
 
