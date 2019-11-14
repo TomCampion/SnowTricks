@@ -44,12 +44,15 @@
                 <td>{{ user.ban|number_format  }}</td>
                 <td>{{ user.IsActive|number_format }}</td>
                 <td>{{ user.creationDate|date("m/d/Y H:i") }}</td>
-                <td><a class="text-white" href="{{ path('ban_user',{ 'user_id': user.id } ) }}"><button type="button" class="btn btn-danger">Bannir</button></a></td>
+                <td><a onclick="return confirm('Etes-vous sûr de vouloir supprimer bannir cet utilisateur ?')" class="text-white" href="{{ path('ban_user',{ 'user_id': user.id } ) }}"><button type="button" class="btn btn-danger">Bannir</button></a></td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
 
     </div>
+
+    {% include 'Pagination.twig' %}
+
 </section>
 {% endblock %}

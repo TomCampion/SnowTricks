@@ -260,15 +260,26 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users", name="admin_users")
+     * @Route("/admin/users/{page}", name="admin_users")
+     * @param int $page
      * @return Response
      */
-    public function ShowUsers(): Response
+    public function ShowUsers(int $page = 1): Response
     {
-        $users = $this->em->getRepository(User::class)->findAll();
+        $nbUsersByPage = getenv('MAX_ELEMENTS_PAR_PAGE_ADMIN');
+
+        $users = $this->em->getRepository(User::class)->findAllPaginate($page, $nbUsersByPage);
+
+        $pagination = array(
+            'page' => $page,
+            'nbPages' => ceil(count($users) / $nbUsersByPage),
+            'nomRoute' => 'admin_users',
+            'paramsRoute' => array()
+        );
 
         return $this->render('backend/users.twig',[
-            'users' => $users
+            'users' => $users,
+            'pagination' => $pagination
         ]);
     }
 
