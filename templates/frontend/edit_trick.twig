@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{trick.name}}{% endblock %}
+
+{% block content %}
+
+    <img id="td_bg" class="w-100" src="{{ asset('images/trick/trickdefaultcover.jpg') }}">
+
+    <div style="max-width:1250px;" class="shadow container border mt-lg-5 mb-5 p-0 bg-light">
+
+        {% if trick.author == app.user and trick.images.first %}
+            <div style="z-index: 1;" class="position-absolute pl-3 pr-3 m-2 bg-light border">
+                <i id="edit1" class="mr-2 text-dark fas fa-pencil-alt"></i>
+                <a onclick="return confirm('Etes-vous sûr de vouloir supprimer cette image ?')" href="{{ path('delete_image', {'image_id':trick.images.first.id}) }}"><i class="text-dark fas fa-trash-alt"></i></a>
+                {{ form_start(imageForm.createView, {'attr': {'id': 'imageForm1', 'class':'formMh imageForm', 'action' : path('edit_image', { 'image_id':trick.images.first.id }) }}) }}
+                {{ form_end(imageForm.createView) }}
+            </div>
+        {% endif %}
+
+        <div class="position-relative">
+        {% if trick.images.first is not empty %}
+            <img id="trick_img" style="width:100% ;height:auto;" src="{{ asset('images/trick/') ~ trick.id ~'/'~ trick.images.first.filename }}">
+        {% else %}
+            <img id="trick_img" style="width:100% ;height:auto;" src="{{ asset('images/trick/default.png') }}">
+        {% endif %}
+            <h1 id="trick_title" class="m-auto font-weight-bold text-center align-middle">{{ trick.name }}</h1>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="container-flex mr-3 ml-3 mt-2 text-center alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('failed') %}
+            <div class="custom_container mt-3 container alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div id="show_medias" class="text-center mt-4">
+            <button onclick="showMedias()" type="button" class="btn-lg btn-primary">Voir médias</button>
+        </div>
+
+        <div id="medias" class="container-fluid d-flex justify-content-md-between flex-wrap justify-content-center">
+
+            {% for image in trick.images %}
+                {% if loop.index > 1 %}
+                    <div class="trick_medias mb-5 mt-5 shadow" style="width:300px; height:190px;">
+                        <img class="w-100 h-100" src="{{ asset('images/trick/' ~ trick.id ~'/'~ image.filename) }}">
+                        {% if trick.author == app.user %}
+                            <div class="edit_medias p-2 text-right pr-4">
+                                <i id="edit{{ loop.index }}" class="mr-2 text-dark fas fa-pencil-alt"></i></a>
+                                <a onclick="return confirm('Etes-vous sûr de vouloir supprimer cette image ?')" href="{{ path('delete_image', {'image_id':image.id}) }}"><i class="text-dark fas fa-trash-alt"></i></a>
+                                    {% set imageFormView = imageForm.createView %}
+                                    {{ form_start(imageFormView, {'attr': {'id':'imageForm'~loop.index,'class': 'formMh imageForm text-left', 'action' : path('edit_image', { 'image_id':image.id }) }}) }}
+                                    {{ form_end(imageFormView) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+
+            {% for video in trick.videos %}
+                <div class="trick_medias mb-4 mt-5 shadow" style="width:300px; height:190px;">
+                    {{ video.iframe |raw }}
+
+                    {% if trick.author == app.user %}
+                        <div class="text-right pr-2">
+                            <i id="editVideo{{ loop.index }}" class="mr-2 text-dark fas fa-pencil-alt"></i>
+                            <a onclick="return confirm('Etes-vous sûr de vouloir supprimer cette video ?')" href="{{ path('delete_video', {'video_id':video.id}) }}"><i class="text-dark fas fa-trash-alt"></i></a>
+                            {% set videoFormView = videoForm.createView %}
+                            {{ form_start(videoFormView, {'attr': {'style':'max-height:38px','id':'videoForm'~loop.index,' class': 'formMh videoForm d-flex flex-row-reverse text-left', 'action' : path('edit_video', { 'video_id':video.id }) }}) }}
+                                <button type="submit" class="btn btn-primary"><i class="far fa-save"></i></button>
+                            {{ form_end(videoFormView) }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-3 container-flex d-flex justify-content-between">
+            <div class="w-25 text-left mt-5 ml-4">
+                <button id="addTrickImage" type="button" class="mb-2 btn-lg btn-info">Ajouter une image</button>
+                {{ form_start(imageForm.createView, {'attr': {'id':'addImageForm', 'action' : path('add_image',{ 'trick_id': trick.id }) } }) }}
+                {{ form_end(imageForm.createView) }}
+            </div>
+            <div class="w-25 text-right mt-5 mr-4">
+                <button id="addTrickVideo" type="button" class="mb-2 btn-lg btn-info">Ajouter une video</button>
+                {{ form_start(videoForm.createView, {'attr': { 'id':'addVideoForm', 'class':'d-flex flex-column-reverse','action' : path('add_video',{ 'trick_id': trick.id }) } }) }}
+                <button type="submit" class="w-50 btn btn-primary">Enregistrer</button>
+                {{ form_end(videoForm.createView) }}
+            </div>
+        </div>
+
+        <div class="mt-4 container-fluid align-items-center justify-content-center row m-0 ">
+            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white">Groupe : {{ trick.category }}</div>
+            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white">Difficulté :
+                {% for i in 0..4 %}
+                    {% if i < trick.difficulty %}
+                        <i class="fas fa-star"></i>
+                    {% else %}
+                        <i class="far fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Auteur : {{ trick.author.username }}</div>
+            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Créé le {{ trick.creationDate|date("m/d/Y") }}</div>
+            {% if trick.updateDate is not empty %}
+                <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Modifié le {{ trick.updateDate|date("m/d/Y") }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mt-4 mb-4 container text-justify">
+            {{ form_start(form) }}
+                {{ form_rest(form) }}
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn-lg btn-primary">Enregistrer</button>
+                {{ form_end(form) }}
+            </div>
+            <div class="text-right">
+                <a onclick="return confirm('Etes-vous sûr de vouloir supprimer ce trick ?')" href="{{ path('delete_trick',{ 'trick_id': trick.id } ) }}"><button class="btn-lg btn-danger">Supprimer</button></a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showMedias(){
+            document.getElementById('medias').style.cssText = "display:flex !important";
+        }
+
+        $(".form-group").css('width', '100%');
+        $("input[type=file]").attr("onchange", "this.form.submit()")
+
+        for(i=1; i <= $('.imageForm').length; i++){
+            $('#imageForm'+i).css('display','none');
+            $('#edit'+i).css('cursor','pointer');
+            $('#edit'+i).click(function() {
+                $('#imageForm'+this.id.substr(4)).css('display','block');
+            });
+        }
+
+        for(i=1; i <= $('.videoForm').length; i++){
+            console.log($('#videoForm'+i));
+            $('#videoForm'+i).attr('style','display: none !important');
+            $('#editVideo'+i).css('cursor','pointer');
+            $('#editVideo'+i).click(function() {
+                $('#videoForm'+this.id.substr(9)).css('display','block');
+            });
+        }
+
+        $('#addImageForm').css('display','none');
+        $('#addVideoForm').attr('style','display: none !important');
+        $('#addTrickImage').click(function() {
+            $('#addImageForm').css('display','block');
+        });
+        $('#addTrickVideo').click(function() {
+            $('#addVideoForm').attr('style','display: flex !important; text-align: -webkit-right;');
+        });
+    </script>
+{% endblock %}
