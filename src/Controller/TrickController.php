@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Form\ImageType;
 use App\Form\VideoType;
+use App\Service\AccesHelper;
 use App\Service\CollectionTypeHelper;
 use App\Entity\Trick;
 use App\Form\TrickType;
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TrickController extends AbstractController
 {
@@ -24,9 +26,15 @@ class TrickController extends AbstractController
      */
     private $em;
 
-    public function __construct(ObjectManager $em)
+    /**
+     * @var AccesHelper
+     */
+    private $accesHelper;
+
+    public function __construct(ObjectManager $em, AccesHelper $accesHelper)
     {
         $this->em = $em;
+        $this->accesHelper = $accesHelper;
     }
 
     /**
@@ -128,14 +136,15 @@ class TrickController extends AbstractController
      * @Route("/tricks/editer/{trick_name}", name="edit_trick")
      * @param Request $request
      * @param $trick_name
+     * @param AuthorizationCheckerInterface $authChecker
      * @return Response
      */
-    public function editTrick(Request $request, $trick_name): Response
+    public function editTrick(Request $request, $trick_name, AuthorizationCheckerInterface $authChecker): Response
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['name' => $trick_name]);
 
-        if(empty($trick) or $trick->getAuthor() != $this->getUser() ){
-            return $this->redirectToRoute('home');
+        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+            $this->redirectToRoute('home');
         }
 
         $form = $this->createForm(EditTrickType::class, $trick);
@@ -158,7 +167,7 @@ class TrickController extends AbstractController
             );
             return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
         }
-
+        dump($trick);
         return $this->render('frontend/edit_trick.twig',[
             'trick' => $trick,
             'form' => $form->createView(),
@@ -177,8 +186,8 @@ class TrickController extends AbstractController
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['id' => $trick_id]);
 
-        if(empty($trick) or $trick->getAuthor() != $this->getUser() ){
-            return $this->redirectToRoute('home');
+        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+            $this->redirectToRoute('home');
         }
 
         $this->em->remove($trick);

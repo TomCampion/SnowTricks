@@ -174,3 +174,7 @@ body{
     font-size: 0.75rem;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
+
+.cursor-pointer{
+    cursor: pointer;
+}
