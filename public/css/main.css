@@ -45,23 +45,51 @@ section{
     font-size: 1.5rem;
 }
 
-label[for=edit_profile_picture_avatar]
+#change-avatar label[for=edit_profile_picture_avatar]
 {
     margin-bottom: 0px;
     cursor: pointer;
 }
 
-form[name=edit_profile_picture]
+#change-avatar form[name=edit_profile_picture]
 {
     display: inherit;
 }
 
-.custom-file-label, #edit_profile_picture_avatar, .custom-file
+#change-avatar .custom-file-label, #edit_profile_picture_avatar, #change-avatar .custom-file
 {
     display: none !important;
 }
 
-form[name=edit_profile_picture] .form-group
+#change-avatar form[name=edit_profile_picture] .form-group
 {
     margin-bottom: 0px;
+}
+
+textarea {
+    height: 140px !important;
+}
+
+#bg{
+    height: 95vh;
+    margin:0;
+    padding:0;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.45)),  url("/snowtricks/public/images/bg.jpg") no-repeat center fixed;
+    -webkit-background-size: cover; /* pour anciens Chrome et Safari */
+    background-size: cover; /* version standardisée */
+}
+
+#arrow{
+    font-size: 40px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 15px;
+    margin-bottom: 55px;
+    color: lightcyan;
+}
+
+#add_trick{
+    position: absolute;
+    right: 100px;
 }

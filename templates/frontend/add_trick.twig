@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un trick{% endblock %}
+
+{% block content %}
+    <section class="flex-column">
+
+        <h1 class="mt-4 text-center">Ajouter un trick</h1>
+
+        <div class="custom_container mt-4 pb-5 container border form-group d-flex align-items-center flex-column justify-content-around">
+            <div class="container-fluid">
+
+                {{ form_start(form) }}
+
+                <p>Images</p>
+                <ul class="images" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
+                    {# iterate over each existing tag and render its only field: name #}
+                    {% for image in form.images %}
+                        <li>{{ form_row(image.filename) }}</li>
+                    {% endfor %}
+                </ul>
+
+                <p>Vidéos</p>
+                <ul class="videos" data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}">
+                    {# iterate over each existing tag and render its only field: name #}
+                    {% for video in form.videos %}
+                        <li>{{ form_row(video.iframe) }}</li>
+                    {% endfor %}
+                </ul>
+
+                    {{ form_rest(form) }}
+                <div class="text-center">
+                    <p>* Champs obligatoires</p>
+                    <button class="btn-lg btn-primary btn-primary-blue-reverse" type="submit">Enregistrer</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous">
+        </script>
+        <script>
+            var $collectionHolder;
+
+            function addTagForm($collectionHolder, $newLinkLi) {
+                var prototype = $collectionHolder.data('prototype');
+                var index = $collectionHolder.data('index');
+                var newForm = prototype;
+                newForm = newForm.replace(/__name__/g, index);
+                $collectionHolder.data('index', index + 1);
+                var $newFormLi = $('<li></li>').append(newForm);
+                $newLinkLi.before($newFormLi);
+            }
+
+            var $addTagButton = $('<button type="button" class="add_tag_link btn-primary rounded">Ajouter une photo</button>');
+            var $newLinkLi = $('<li></li>').append($addTagButton);
+
+            var $addVideoButton = $('<button type="button" class="add_tag_link btn-primary rounded">Ajouter une vidéo</button>');
+            var $newLinkLVideo = $('<li></li>').append($addVideoButton);
+
+            jQuery(document).ready(function() {
+                $collectionHolder = $('ul.images');
+                $collectionHolder.append($newLinkLi);
+                $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+                $collectionVideos = $('ul.videos');
+                $collectionVideos.append($newLinkLVideo);
+                $collectionVideos.data('index', $collectionVideos.find(':input').length);
+
+                $addTagButton.on('click', function(e) {
+                    addTagForm($collectionHolder, $newLinkLi);
+                });
+
+                $addVideoButton.on('click', function(e) {
+                    addTagForm($collectionVideos, $newLinkLVideo);
+                });
+
+            });
+
+        </script>
+
+    </section>
+{% endblock %}

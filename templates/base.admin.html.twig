@@ -14,7 +14,7 @@
 <body>
 <nav class="d-none d-md-flex p-0 navbar navbar-expand-lg bg-secondary navbar-dark  shadow-sm pl-4 pr-4">
     <img id="logo-navbar" src="{{ asset('images/logo.png') }}" alt="logo snowtricks">
-    <a class="pl-2 navbar-brand" href="">Snowtricks</a>
+    <a class="pl-2 navbar-brand" href="{{ path('home') }}">Snowtricks</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -22,10 +22,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="">Accueil</a>
+                <a class="nav-link" href="{{ path('home') }}">Accueil</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">Tricks</a>
+                <a class="nav-link" href="{{ path('admin') }}">Tricks</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('add_trick') }}">Ajouter un trick</a>

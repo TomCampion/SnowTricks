@@ -5,11 +5,14 @@ namespace App\Form;
 use App\Entity\Trick;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Range;
+
 
 class TrickType extends AbstractType
 {
@@ -20,7 +23,7 @@ class TrickType extends AbstractType
                 'empty_data' => '',
                 'label' => 'Nom du Trick *'
             ])
-            ->add('description', TextType::class, [
+            ->add('description', TextareaType::class, [
                 'empty_data' => '',
                 'label' => 'Description *'
             ])
@@ -34,17 +37,29 @@ class TrickType extends AbstractType
             ->add('difficulty', IntegerType::class, [
                 'attr' => [
                     'max' => 5,
-                    'min' => 0
+                    'min' => 1
                 ],
                 'label' => 'Difficulté *',
                 'constraints' => [
                     new Range([
                         'min' => 1,
                         'max' => 5,
-                        'minMessage' => 'La difficulté doit faire au moins {{ limit }} caractères',
-                        'maxMessage' => 'La difficulté ne doit pas excéder {{ limit }} caractères'
+                        'minMessage' => 'La difficultédoit valoir au minimum {{ limit }}',
+                        'maxMessage' => 'La difficulté ne doit pas excéder {{ limit }} '
                     ])
                 ]
+            ])
+            ->add('videos', CollectionType::class, [
+                'label' => false,
+                'entry_type' => VideoType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+            ])
+            ->add('images', CollectionType::class, [
+                'label' => false,
+                'entry_type' => ImageType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
             ])
         ;
     }
