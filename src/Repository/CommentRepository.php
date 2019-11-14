@@ -23,12 +23,11 @@ class CommentRepository extends ServiceEntityRepository
 
     public function getCommentsNumberByUser(User $user)
     {
-        $qb = $this->createQueryBuilder('c');
-        $qb->select('count(c.id)');
-        $qb->from(Comment::class,'t');
-        $qb->where('c.author ='.$user->getId());
+        $rawSql = 'SELECT COUNT(c.id) FROM comment AS c WHERE c.author_id = '.$user->getId();
 
-        $count = $qb->getQuery()->getSingleScalarResult();
-        return $count;
+        $stmt = $this->getEntityManager()->getConnection()->prepare($rawSql);
+        $stmt->execute();
+
+        return $stmt->fetch()["COUNT(c.id)"];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VideoRepository")
@@ -17,6 +18,12 @@ class Video
     private $id;
 
     /**
+     * @Assert\NotNull(
+     *     message= "Vous devez renseigner ce champ"
+     *  )
+     *  @Assert\NotBlank(
+     *     message= "Vous devez renseigner ce champ"
+     *  )
      * @ORM\Column(type="string", length=511)
      */
     private $iframe;

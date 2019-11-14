@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment
 {
@@ -42,11 +43,6 @@ class Comment
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
-
-    public function __construct()
-    {
-        $this->creationDate = new \DateTime();
-    }
 
     public function getId(): ?int
     {
@@ -111,5 +107,21 @@ class Comment
         $this->trick = $trick;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateDate()
+    {
+        $this->setUpdateDate(new \Datetime());
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function creationDate()
+    {
+        $this->setCreationDate(new \Datetime());
     }
 }

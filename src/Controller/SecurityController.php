@@ -56,7 +56,8 @@ class SecurityController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $token = new Token();
             $token->setValue($this->generateUniqueToken());
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+            $plainPassword = $user->getPassword();
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $plainPassword));
             $user->setConfirmationToken($token);
             $this->em->persist($user);
             $this->em->flush();
@@ -102,6 +103,7 @@ class SecurityController extends AbstractController
         $tokenExist = $user->getConfirmationToken()->getValue();
         if($token === $tokenExist) {
             $user->setIsActive(true);
+            $this->em->getRepository(Token::class)->setNullValue($user->getConfirmationToken()->getId());
             $this->em->persist($user);
             $this->em->flush();
 
@@ -112,7 +114,7 @@ class SecurityController extends AbstractController
 
             return $this->redirectToRoute('app_login');
         } else {
-            return $this->render('frontend/login.twig');
+            return $this->redirectToRoute('app_login');
         }
     }
 
@@ -205,25 +207,41 @@ class SecurityController extends AbstractController
         $tokenExist = $user->getPasswordToken()->getValue();
 
         if($token === $tokenExist) {
-            if($form->isSubmitted() and $form->isValid())
+
+            //Check token expiration date
+            $days = getenv('FORGOT_PASSWORD_TOKEN_DURATION');
+            $maxInterval = date_interval_create_from_date_string("$days days");
+            $expirationDate = date_add($user->getPasswordToken()->getCreationDate(),$maxInterval);
+
+            if($expirationDate > new \DateTime())
             {
-                if($form->getData()['newPassword'] === $form->getData()['confirmPassword'])
+
+                if($form->isSubmitted() and $form->isValid())
                 {
-                    $user->setPlainPassword($form->getData()['newPassword']);
-                    $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
-                    $this->em->persist($user);
-                    $this->em->flush();
-                    $this->addFlash(
-                        "success",
-                        "Votre mot de passe a bien été modifié !"
-                    );
-                    return $this->redirectToRoute('app_login');
-                }else{
-                    $this->addFlash(
-                        "failed",
-                        "Champs nouveau mot de passe et confirmer mot de passe différent."
-                    );
+                    if($form->getData()['newPassword'] === $form->getData()['confirmPassword'])
+                    {
+                        $plainPassword = $user->getPassword();
+                        $user->setPassword($this->passwordEncoder->encodePassword($user, $plainPassword));
+                        $this->em->persist($user);
+                        $this->em->flush();
+                        $this->addFlash(
+                            "success",
+                            "Votre mot de passe a bien été modifié !"
+                        );
+                        return $this->redirectToRoute('app_login');
+                    }else{
+                        $this->addFlash(
+                            "failed",
+                            "Champs nouveau mot de passe et confirmer mot de passe différent."
+                        );
+                    }
                 }
+            }else{
+                $this->addFlash(
+                    "failed",
+                    "La durée d'expiration du lien de réinitialisation du mot de passe à expiré. Vous pouvez recommencer la procédure en cliquant sur Mot de passe oublié."
+                );
+                return $this->redirectToRoute('app_login');
             }
         } else {
             return $this->redirectToRoute('app_login');

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TokenRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Token
 {
@@ -17,7 +18,7 @@ class Token
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
      */
     private $value;
 
@@ -26,10 +27,6 @@ class Token
      */
     private $creationDate;
 
-    public function __construct()
-    {
-        $this->creationDate = new \DateTime();
-    }
 
     public function getId(): ?int
     {
@@ -60,4 +57,11 @@ class Token
         return $this;
     }
 
+    /**
+     * @ORM\PrePersist
+     */
+    public function creationDate()
+    {
+        $this->setCreationDate(new \Datetime());
+    }
 }

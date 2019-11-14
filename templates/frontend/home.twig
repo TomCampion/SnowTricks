@@ -16,39 +16,59 @@
     </div>
 {% endfor %}
 
-        <div class="p-sm-5 pt-4 row">
+        <div class="p-sm-5 pt-4 row bg-light">
 
             {% for trick in tricks %}
 
-                <div class="col-sm mb-4">
+                <div class="tricks col-sm mb-4">
+                    <a class="text-decoration-none text-dark" href="{{ path('trick_details', { 'trick_name': trick.name }) }}">
                     <div class="card mx-auto" style="width: 18rem;">
                         {% if trick.images is empty %}
-                            <img class="shadow-sm" style="height: 200px;" src="{{asset('images/trick/default.jpg')}}">
+                            <img class="shadow-sm w-100" style="height: 200px;" src="{{asset('images/trick/default.png')}}">
                         {% else %}
-                            <img class="shadow-sm" style="height: 200px;" src="{{asset('images/trick/' ~ trick.id ~ '/' ~ trick.images.first.filename ) }}" alt="{{ trick.name }}">
+                            <img class="shadow-sm w-100" style="height: 200px;" src="{{asset('images/trick/' ~ trick.id ~ '/' ~ trick.images.first.filename ) }}" alt="{{ trick.name }}">
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title d-inline">{{trick.name}}</h5>
                             {% if trick.author == app.user %}
                             <div class="float-right">
-                                <a href="{{ path('edit_trick',{ 'trick_id': trick.id } ) }}"> <i class="mr-2 text-dark fas fa-pencil-alt"></i></a>
+                                <a href="{{ path('edit_trick',{ 'trick_name': trick.name } ) }}"> <i class="mr-2 text-dark fas fa-pencil-alt"></i></a>
                                 <a onclick="return confirm('Etes-vous sûr de vouloir supprimer ce trick ?')" href="{{ path('delete_trick',{ 'trick_id': trick.id } ) }}"><i class="text-dark fas fa-trash-alt"></i></a>
                             </div>
                             {% endif %}
                         </div>
                     </div>
+                    </a>
                 </div>
 
             {% endfor %}
 
         <div class="container-fluid text-center mb-4">
-            <button type="button" class="btn btn-primary">Voir plus</button>
+                <button id="show_more" onclick="showMore()" type="button" class="btn btn-primary">Voir plus</button>
             {% if app.user %}
-                <button id="add_trick" type="button" class="btn btn-primary"><a class="text-white" href="{{ path('add_trick') }}">Ajouter un trick</a></button>
+                <a class="text-white" href="{{ path('add_trick') }}"><button id="add_trick" type="button" class="btn btn-primary">Ajouter un trick</button></a>
             {% endif %}
+                <a href="#"><i id="arrow_up" class="text-dark fas fa-arrow-up"></i></a>
         </div>
 
         </div>
 
     </div>
+
+    <script>
+        var tricks = $('.tricks');
+        document.getElementById('arrow_up').style.display = "none";
+
+        for(i=15; i<tricks.length; i++){
+            tricks[i].style.display = "none";
+        }
+
+        function showMore() {
+            var tricks = $('.tricks');
+            document.getElementById('arrow_up').style.display = "inline-block";
+            for(i=15; i<tricks.length; i++){
+                tricks[i].style.display = "block";
+            }
+        }
+    </script>
 {% endblock %}

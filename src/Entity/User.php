@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "username",
  *     message="ce nom d'utilisateur est déjà utilisé"
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface
 {
@@ -54,9 +55,15 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
+     * * @Assert\Length(
+     *      min = 4,
+     *      max = 255,
+     *      minMessage = "Votre mot de passe doit faire au moins {{ limit }} caractères",
+     *      maxMessage = "Votre mot de passe ne doit pas excéder {{ limit }} caractères"
+     * )
      * @ORM\Column(type="string")
      */
-    private $password;
+    private $password ='';
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
@@ -116,28 +123,11 @@ class User implements UserInterface
      */
     private $passwordToken;
 
-    /**
-     * * @Assert\NotNull(
-     *     message= "Vous devez renseigner un mot de passe"
-     * )
-     * @Assert\NotBlank(
-     *     message= "Vous devez renseigner un mot de passe"
-     * )
-     * @Assert\Length(
-     *      min = 4,
-     *      max = 50,
-     *      minMessage = "Votre mot de passe doit faire au moins {{ limit }} caractères",
-     *      maxMessage = "Votre mot de passe ne doit pas excéder {{ limit }} caractères"
-     * )
-     */
-    private $plainPassword;
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->tricks = new ArrayCollection();
 
-        $this->creationDate = new \DateTime();
         $this->roles = array('ROLE_USER');
     }
 
@@ -370,5 +360,13 @@ class User implements UserInterface
         $this->plainPassword = $password;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function creationDate()
+    {
+        $this->setCreationDate(new \Datetime());
     }
 }

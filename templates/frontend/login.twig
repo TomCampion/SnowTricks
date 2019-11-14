@@ -32,7 +32,8 @@
                         <br>
                         <a href="{{ path('app_logout') }}">Se déconnecter</a>
                     </div>
-                {% endif %}
+                {% else %}
+
 
                 <label for="inputEmail">Email</label>
                 <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
@@ -57,5 +58,6 @@
                 <a class="font-white blue-hover" href="{{ path('forgot_password') }}">Mot de passe oublié ?</a>
             </div>
         </div>
+        {% endif %}
     </section>
 {% endblock %}

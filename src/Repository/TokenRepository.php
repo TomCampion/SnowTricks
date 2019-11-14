@@ -19,4 +19,10 @@ class TokenRepository extends ServiceEntityRepository
         parent::__construct($registry, Token::class);
     }
 
+    public function setNullValue ($token_id){
+        $rawSql = 'UPDATE token SET value = null WHERE id = '.$token_id;
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($rawSql);
+        $stmt->execute();
+    }
 }

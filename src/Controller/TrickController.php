@@ -3,9 +3,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Video;
+use App\Form\ImageType;
+use App\Form\VideoType;
 use App\Service\CollectionTypeHelper;
 use App\Entity\Trick;
 use App\Form\TrickType;
+use App\Form\EditTrickType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +55,20 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/add_trick", name="add_trick")
+     * @Route("/tricks/{trick_name}", name="trick_details")
+     * @return Response
+     */
+    public function tricksDetails($trick_name) : Response
+    {
+        $trick = $this->em->getRepository(Trick::class)->findOneBy(['name' => $trick_name]);
+
+        return $this->render('frontend/trick_details.twig',[
+            'trick' => $trick
+        ]);
+    }
+
+    /**
+     * @Route("/ajouter_trick", name="add_trick")
      * @param Request $request
      * @param CollectionTypeHelper $collectionTypeHelper
      * @return Response
@@ -70,7 +87,6 @@ class TrickController extends AbstractController
             $this->em->persist($trick);
 
             $tabImageFiles = $collectionTypeHelper->getImagesCollectionTypeForm($trick, $form);
-            $collectionTypeHelper->persistVideosCollectionTypeForm($trick, $form);
 
             $this->em->flush();
 
@@ -86,7 +102,7 @@ class TrickController extends AbstractController
                 "success",
                 "Nouveau trick enregistré !"
             );
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('home');
 
         }
 
@@ -96,38 +112,50 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/admin/edit_trick/{trick_id}", name="edit_trick")
+     * @Route("/tricks/editer/{trick_name}", name="edit_trick")
      * @param Request $request
-     * @param $trick_id
+     * @param $trick_name
      * @return Response
      */
-    public function editTrick(Request $request, $trick_id): Response
+    public function editTrick(Request $request, $trick_name): Response
     {
-        $trick = $this->em->getRepository(Trick::class)->findOneBy(['id' => $trick_id]);
+        $trick = $this->em->getRepository(Trick::class)->findOneBy(['name' => $trick_name]);
 
         if(empty($trick) or $trick->getAuthor() != $this->getUser() ){
             return $this->redirectToRoute('home');
         }
 
-        $form = $this->createForm(TrickType::class, $trick);
+        $form = $this->createForm(EditTrickType::class, $trick);
         $form->handleRequest($request);
+
+        $imageForm = $this->createForm(ImageType::class);
+        $imageForm->handleRequest($request);
+
+        $videoForm = $this->createForm(VideoType::class);
+        $videoForm->handleRequest($request);
 
         if($form->isSubmitted() and $form->isValid())
         {
-            $trick->setUpdateDate(new \DateTime());
+
             $this->em->persist($trick);
             $this->em->flush();
             $this->addFlash(
                 "success",
                 "Modification du trick enregistré !"
             );
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
         }
 
+        return $this->render('frontend/edit_trick.twig',[
+            'trick' => $trick,
+            'form' => $form->createView(),
+            'imageForm' => $imageForm,
+            'videoForm' => $videoForm
+        ]);
     }
 
     /**
-     * @Route("/admin/delete_trick/{trick_id}", name="delete_trick")
+     * @Route("/delete_trick/{trick_id}", name="delete_trick")
      * @param Request $request
      * @param $trick_id
      * @return Response

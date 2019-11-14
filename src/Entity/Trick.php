@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "name",
  *     message="ce nom est déjà utilisé"
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class Trick
 {
@@ -101,7 +102,7 @@ class Trick
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="trick", orphanRemoval=true, cascade={"persist"})
      */
     private $videos;
 
@@ -121,8 +122,6 @@ class Trick
         $this->images = new ArrayCollection();
         $this->videos = new ArrayCollection();
         $this->comments = new ArrayCollection();
-
-        $this->creationDate = new \DateTime();
     }
 
     public function getId(): ?int
@@ -305,5 +304,21 @@ class Trick
         $this->author = $author;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateDate()
+    {
+        $this->setUpdateDate(new \Datetime());
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function creationDate()
+    {
+        $this->setCreationDate(new \Datetime());
     }
 }
