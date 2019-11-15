@@ -88,7 +88,7 @@ class TrickController extends AbstractController
 
         $response = $this->render('frontend/trick.twig', array('tricks' => $tricks))->getContent();
 
-        return new JsonResponse($response);
+        return new Response($response);
     }
 
     /**

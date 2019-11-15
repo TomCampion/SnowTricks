@@ -73,7 +73,7 @@ class CommentController extends AbstractController
 
         $response = $this->render('frontend/comment.twig', array('comments' => $comments))->getContent();
 
-        return new JsonResponse($response);
+        return new Response($response);
     }
 
     /**
