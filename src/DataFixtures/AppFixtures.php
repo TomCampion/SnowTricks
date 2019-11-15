@@ -14,7 +14,7 @@ class AppFixtures extends Fixture
         $json = file_get_contents('Tricks.json');
         $obj = json_decode($json);
 
-        $author = $manager->getRepository(User::class)->findOneBy(["id"=>26]);
+        $author = $manager->getRepository(User::class)->findOneBy(["id"=>1]);
 
         for($i=0; $i< sizeof($obj->tricks); $i++){
             $trick = new Trick();
@@ -28,5 +28,6 @@ class AppFixtures extends Fixture
 
             $manager->flush();
         }
+
     }
 }
