@@ -95,6 +95,14 @@ class ProfileController extends AbstractController
            $this->em->flush();
         }
 
+        $errors = $editProfileForm->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed_profile",
+                $error->getMessage()
+            );
+        }
+
         return $this->redirectToRoute('profile');
     }
 
@@ -181,6 +189,14 @@ class ProfileController extends AbstractController
                     "Le site a rencontré un problème, votre avatar n'a pas pu être téléchargé."
                 );
             }
+        }
+
+        $errors = $formAvatar->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed_avatar",
+                $error->getMessage()
+            );
         }
 
         return $this->redirectToRoute('profile');

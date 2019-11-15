@@ -128,6 +128,14 @@ class ImageController extends AbstractController
             return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
         }
 
+        $errors = $imageForm->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed",
+                $error->getMessage()
+            );
+        }
+
         return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
     }
 

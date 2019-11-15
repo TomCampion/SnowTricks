@@ -99,6 +99,14 @@ class VideoController extends AbstractController
             return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
         }
 
+        $errors = $videoForm->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed",
+                $error->getMessage()
+            );
+        }
+
         return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
     }
 

@@ -110,6 +110,14 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
         }
 
+        $errors = $form->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed",
+                $error->getMessage()
+            );
+        }
+
         return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
     }
 
