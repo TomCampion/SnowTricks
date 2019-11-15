@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -349,6 +350,16 @@ class Trick
     public function SetCreationDateOnCreation()
     {
         $this->setCreationDate(new \Datetime());
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function deleteImage()
+    {
+        $filesystem = new Filesystem();
+
+        $filesystem->remove('images/trick/'.$this->getId());
     }
 
 }
