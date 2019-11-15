@@ -118,7 +118,7 @@ class CommentController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('trick_details',['trick_slug' => $trick->getSlug()]);
     }
 
     /**
@@ -145,7 +145,7 @@ class CommentController extends AbstractController
             "Commentaire supprimé !"
         );
 
-        return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('trick_details',['trick_slug' => $trick->getSlug()]);
     }
 
 }

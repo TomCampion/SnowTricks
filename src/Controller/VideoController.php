@@ -62,10 +62,10 @@ class VideoController extends AbstractController
                 "Vidéo ajouté"
             );
 
-            return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
         }
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 
     /**
@@ -96,7 +96,7 @@ class VideoController extends AbstractController
                 "Modification de la vidéo enregistré"
             );
 
-            return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
         }
 
         $errors = $videoForm->getErrors(true);
@@ -107,7 +107,7 @@ class VideoController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 
     /**
@@ -132,6 +132,6 @@ class VideoController extends AbstractController
             "Suppression de la vidéo éffectué !"
         );
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 }

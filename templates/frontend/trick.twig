@@ -1,7 +1,7 @@
 {% for trick in tricks %}
 
     <div class="tricks col-sm mb-4">
-        <a class="text-decoration-none text-dark" href="{{ path('trick_details', { 'trick_name': trick.name }) }}">
+        <a class="text-decoration-none text-dark" href="{{ path('trick_details', { 'trick_slug': trick.slug }) }}">
             <div class="card mx-auto" style="width: 18rem;">
                 {% if trick.images is empty %}
                     <img class="shadow-sm w-100" style="height: 200px;" src="{{asset('images/trick/default.png')}}">
@@ -12,7 +12,7 @@
                     <h5 class="card-title d-inline">{{trick.name}}</h5>
                     {% if trick.author == app.user or is_granted('ROLE_ADMIN') %}
                         <div class="float-right">
-                            <a href="{{ path('edit_trick',{ 'trick_name': trick.name } ) }}"> <i class="mr-2 text-dark fas fa-pencil-alt"></i></a>
+                            <a href="{{ path('edit_trick',{ 'trick_slug': trick.slug } ) }}"> <i class="mr-2 text-dark fas fa-pencil-alt"></i></a>
                             <a onclick="return confirm('Etes-vous sûr de vouloir supprimer ce trick ?')" href="{{ path('delete_trick',{ 'trick_id': trick.id } ) }}"><i class="text-dark fas fa-trash-alt"></i></a>
                         </div>
                     {% endif %}

@@ -79,7 +79,7 @@ class TrickController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function LoadMoreTricks(Request $request)
+    public function LoadMoreTricks(Request $request): Response
     {
         $limit = getenv('MAX_TRICKS_LOADED');
         $offset = $request->get('offset');
@@ -92,14 +92,14 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/tricks/{trick_name}", name="trick_details")
+     * @Route("/tricks/{trick_slug}", name="trick_details")
      * @param Request $request
-     * @param $trick_name
+     * @param $trick_slug
      * @return Response
      */
-    public function tricksDetails(Request $request, $trick_name) : Response
+    public function tricksDetails(Request $request, $trick_slug): Response
     {
-        $trick = $this->em->getRepository(Trick::class)->findOneBy(['name' => $trick_name]);
+        $trick = $this->em->getRepository(Trick::class)->findOneBy(['slug' => $trick_slug]);
         $comments = $this->em->getRepository(Comment::class)->findBy(['trick' => $trick]);
 
         $comment = new Comment();
@@ -161,15 +161,14 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/tricks/editer/{trick_name}", name="edit_trick")
+     * @Route("/tricks/editer/{trick_slug}", name="edit_trick")
      * @param Request $request
-     * @param $trick_name
-     * @param AuthorizationCheckerInterface $authChecker
+     * @param $trick_slug
      * @return Response
      */
-    public function editTrick(Request $request, $trick_name, AuthorizationCheckerInterface $authChecker): Response
+    public function editTrick(Request $request, $trick_slug): Response
     {
-        $trick = $this->em->getRepository(Trick::class)->findOneBy(['name' => $trick_name]);
+        $trick = $this->em->getRepository(Trick::class)->findOneBy(['slug' => $trick_slug]);
 
         if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
@@ -193,9 +192,9 @@ class TrickController extends AbstractController
                 "success",
                 "Modification du trick enregistré !"
             );
-            return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('trick_details',['trick_slug' => $trick->getSlug()]);
         }
-        dump($trick);
+
         return $this->render('frontend/edit_trick.twig',[
             'trick' => $trick,
             'form' => $form->createView(),

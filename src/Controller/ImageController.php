@@ -81,10 +81,10 @@ class ImageController extends AbstractController
                 "Image ajouté !"
             );
 
-            return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
         }
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 
     /**
@@ -125,7 +125,7 @@ class ImageController extends AbstractController
                 "Modification de l'image enregistré !"
             );
 
-            return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
         }
 
         $errors = $imageForm->getErrors(true);
@@ -136,7 +136,7 @@ class ImageController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 
     /**
@@ -162,7 +162,7 @@ class ImageController extends AbstractController
             "Suppression de l'image éffectué !"
         );
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 
     private function deleteTrickImage(Trick $trick, Image $image)
