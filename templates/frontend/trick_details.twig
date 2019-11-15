@@ -76,6 +76,13 @@
             <hr class="mr-4 ml-4">
 
             {% if app.user %}
+
+                {% for message in app.flashes('failed') %}
+                    <div class="custom_container mt-3 container alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
             <div class="container w-50">
             {{ form_start(form) }}
                 {{ form_row(form.content, {'attr': {'style':'min-height: auto !important;'}}) }}
