@@ -19,7 +19,7 @@ class Comment
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;
@@ -33,7 +33,7 @@ class Comment
      *     message= "Vous devez renseigner un commentaire"
      *  )
      * @Assert\Length(
-     *      max = 511,
+     *      max = 1,
      *      maxMessage = "Le commentaire ne peut pas excéder {{ limit }} caractères"
      * )
      */

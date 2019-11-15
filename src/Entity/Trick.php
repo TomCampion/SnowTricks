@@ -107,12 +107,12 @@ class Trick
     private $videos;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\comment", mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", orphanRemoval=true)
      */
     private $comments;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="tricks")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;
