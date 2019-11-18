@@ -79,9 +79,8 @@
                                                                         {% endfor %}
 
                                                                         {{ form_start(form) }}
-                                                                        {{ form_errors(form) }}
+                                                                            <label>Email</label>
                                                                             {{ form_widget(form.email) }}
-                                                                            {{ form_errors(form.email) }}
                                                                             <button class="mt-3 btn btn-primary" type="submit">Modifier</button>
                                                                         {{ form_end(form) }}
 
@@ -155,7 +154,7 @@
                                                     </thead>
                                                     <tbody>
                                                         {% for trick in tricks %}
-                                                                <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_name':trick.name}) }}' ">
+                                                                <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_slug':trick.slug}) }}' ">
                                                                     <td>{{ trick.name }}</td>
                                                                     <td>{{ trick.description|length > 150 ? trick.description|slice(0, 170) ~ '...' : trick.description  }}</td>
                                                                     <td>{{ trick.category }}</td>
