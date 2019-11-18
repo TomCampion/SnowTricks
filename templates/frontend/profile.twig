@@ -190,7 +190,7 @@
                                                     </thead>
                                                     <tbody>
                                                     {% for comment in comments %}
-                                                        <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_name':comment.trick.name}) }}' ">
+                                                        <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_slug':comment.trick.slug}) }}' ">
                                                             <td>{{ comment.trick.name }}</td>
                                                             <td>{{ comment.content }}</td>
                                                             <td>{{ comment.creationDate|date("m/d/Y H:i") }}</td>
