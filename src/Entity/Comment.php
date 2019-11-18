@@ -33,7 +33,7 @@ class Comment
      *     message= "Vous devez renseigner un commentaire"
      *  )
      * @Assert\Length(
-     *      max = 1,
+     *      max = 255,
      *      maxMessage = "Le commentaire ne peut pas excéder {{ limit }} caractères"
      * )
      */
