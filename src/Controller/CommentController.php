@@ -106,7 +106,7 @@ class CommentController extends AbstractController
                 "success",
                 "Commentaire publié !"
             );
-            return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('trick_details',['trick_slug' => $trick->getSlug()]);
         }
 
         $errors = $form->getErrors(true);
