@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Form\ImageType;
-use App\Service\AccesHelper;
+use App\Service\AccessHelper;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,16 +35,16 @@ class ImageController extends AbstractController
     private $logger;
 
     /**
-     * @var AccesHelper
+     * @var AccessHelper
      */
-    private $accesHelper;
+    private $accessHelper;
 
-    public function __construct(ObjectManager $em, LoggerInterface $logger, AccesHelper $accesHelper)
+    public function __construct(ObjectManager $em, LoggerInterface $logger, AccessHelper $accessHelper)
     {
         $this->em = $em;
         $this->logger = $logger;
         $this->filesystem = new Filesystem();
-        $this->accesHelper = $accesHelper;
+        $this->accessHelper = $accessHelper;
     }
 
     /**
@@ -57,7 +57,7 @@ class ImageController extends AbstractController
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['id' => $trick_id]);
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 
@@ -98,7 +98,7 @@ class ImageController extends AbstractController
         $image = $this->em->getRepository(Image::class)->findOneBy(['id' => $image_id]);
         $trick= $image->getTrick();
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 
@@ -149,7 +149,7 @@ class ImageController extends AbstractController
         $image = $this->em->getRepository(Image::class)->findOneBy(['id' => $image_id]);
         $trick= $image->getTrick();
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 

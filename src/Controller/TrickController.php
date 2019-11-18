@@ -3,11 +3,12 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Form\ImageType;
 use App\Form\VideoType;
-use App\Service\AccesHelper;
+use App\Service\AccessHelper;
 use App\Service\CollectionTypeHelper;
 use App\Entity\Trick;
 use App\Form\TrickType;
@@ -17,8 +18,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TrickController extends AbstractController
 {
@@ -28,18 +27,19 @@ class TrickController extends AbstractController
     private $em;
 
     /**
-     * @var AccesHelper
+     * @var AccesssHelper
      */
-    private $accesHelper;
+    private $accessHelper;
 
-    public function __construct(ObjectManager $em, AccesHelper $accesHelper)
+    public function __construct(ObjectManager $em, AccessHelper $accessHelper)
     {
         $this->em = $em;
-        $this->accesHelper = $accesHelper;
+        $this->accessHelper = $accessHelper;
     }
 
     /**
      * @Route("/admin/tricks/{page}", name="admin")
+     * @param int $page
      * @return Response
      */
     public function ShowTricks(int $page = 1): Response
@@ -170,7 +170,7 @@ class TrickController extends AbstractController
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['slug' => $trick_slug]);
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 
@@ -205,15 +205,14 @@ class TrickController extends AbstractController
 
     /**
      * @Route("/delete_trick/{trick_id}", name="delete_trick")
-     * @param Request $request
      * @param $trick_id
      * @return Response
      */
-    public function deleteTrick(Request $request, $trick_id): Response
+    public function deleteTrick($trick_id): Response
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['id' => $trick_id]);
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 

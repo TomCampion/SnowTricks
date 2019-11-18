@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\ChangePasswordType;
@@ -16,8 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProfileController extends AbstractController
 {
@@ -34,10 +33,9 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profil", name="profile")
      * @param Request $request
-     * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function profile(Request $request, ValidatorInterface $validator): Response
+    public function profile(Request $request): Response
     {
         $user = $this->getUser();
 

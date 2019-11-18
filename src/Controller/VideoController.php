@@ -3,10 +3,11 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Trick;
 use App\Entity\Video;
 use App\Form\VideoType;
-use App\Service\AccesHelper;
+use App\Service\AccessHelper;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,14 +23,14 @@ class VideoController extends AbstractController
     private $em;
 
     /**
-     * @var AccesHelper
+     * @var AccessHelper
      */
-    private $accesHelper;
+    private $accessHelper;
 
-    public function __construct(ObjectManager $em, AccesHelper $accesHelper)
+    public function __construct(ObjectManager $em, AccessHelper $accessHelper)
     {
         $this->em = $em;
-        $this->accesHelper = $accesHelper;
+        $this->accessHelper = $accessHelper;
     }
 
     /**
@@ -42,7 +43,7 @@ class VideoController extends AbstractController
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['id' => $trick_id]);
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 
@@ -79,7 +80,7 @@ class VideoController extends AbstractController
         $video = $this->em->getRepository(Video::class)->findOneBy(['id' => $video_id]);
         $trick = $video->getTrick();
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 
@@ -120,7 +121,7 @@ class VideoController extends AbstractController
         $video = $this->em->getRepository(Video::class)->findOneBy(['id' => $video_id]);
         $trick = $video->getTrick();
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 

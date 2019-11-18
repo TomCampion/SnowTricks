@@ -8,7 +8,7 @@ use App\Entity\Trick;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class AccesHelper
+class AccessHelper
 {
 
     /**
