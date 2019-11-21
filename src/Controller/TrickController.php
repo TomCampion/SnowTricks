@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TrickController extends AbstractController
 {
@@ -71,6 +72,23 @@ class TrickController extends AbstractController
         return $this->render('frontend/home.twig',[
             'tricks' => $tricks
         ]);
+    }
+
+    /**
+     * @Route("/ajax/tricks", name="ajax_tricks")
+     * @param Request $request
+     * @return Response
+     */
+    public function LoadMoreTricks(Request $request)
+    {
+        $limit = getenv('MAX_TRICKS_LOADED');
+        $offset = $request->get('offset');
+
+        $tricks = $this->em->getRepository(Trick::class)->findBy(array(),array(),$limit,$offset);
+
+        $response = $this->render('frontend/trick.twig', array('tricks' => $tricks))->getContent();
+
+        return new JsonResponse($response);
     }
 
     /**
