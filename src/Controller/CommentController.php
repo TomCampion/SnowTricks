@@ -9,7 +9,6 @@ use App\Entity\Trick;
 use App\Form\CommentType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -73,7 +72,7 @@ class CommentController extends AbstractController
 
         $response = $this->render('frontend/comment.twig', array('comments' => $comments))->getContent();
 
-        return new JsonResponse($response);
+        return new Response($response);
     }
 
     /**
@@ -107,10 +106,18 @@ class CommentController extends AbstractController
                 "success",
                 "Commentaire publié !"
             );
-            return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('trick_details',['trick_slug' => $trick->getSlug()]);
         }
 
-        return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
+        $errors = $form->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed",
+                $error->getMessage()
+            );
+        }
+
+        return $this->redirectToRoute('trick_details',['trick_slug' => $trick->getSlug()]);
     }
 
     /**
@@ -137,7 +144,7 @@ class CommentController extends AbstractController
             "Commentaire supprimé !"
         );
 
-        return $this->redirectToRoute('trick_details',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('trick_details',['trick_slug' => $trick->getSlug()]);
     }
 
 }

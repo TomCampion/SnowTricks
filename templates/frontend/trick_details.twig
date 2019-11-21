@@ -46,7 +46,7 @@
 
             {% if trick.author == app.user or is_granted('ROLE_ADMIN') %}
             <div class="text-right mt-4 mr-4">
-                <a href="{{ path('edit_trick',{ 'trick_name': trick.name } ) }}"><button type="button" class="btn-lg btn-info">Éditer le trick</button></a>
+                <a href="{{ path('edit_trick',{ 'trick_slug': trick.slug } ) }}"><button type="button" class="btn-lg btn-info">Éditer le trick</button></a>
             </div>
             {% endif %}
 
@@ -76,6 +76,13 @@
             <hr class="mr-4 ml-4">
 
             {% if app.user %}
+
+                {% for message in app.flashes('failed') %}
+                    <div class="custom_container mt-3 container alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
             <div class="container w-50">
             {{ form_start(form) }}
                 {{ form_row(form.content, {'attr': {'style':'min-height: auto !important;'}}) }}

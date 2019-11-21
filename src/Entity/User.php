@@ -113,13 +113,13 @@ class User implements UserInterface
     private $isActive = 0;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\token", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Token", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $confirmationToken;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\token", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Token", cascade={"persist", "remove"})
      */
     private $passwordToken;
 

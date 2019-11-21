@@ -48,7 +48,7 @@
                 {% if loop.index > 1 %}
                     <div class="trick_medias mb-5 mt-5 shadow" style="width:300px; height:190px;">
                         <img class="w-100 h-100" src="{{ asset('images/trick/' ~ trick.id ~'/'~ image.filename) }}">
-                        {% if trick.author == app.user %}
+
                             <div class="edit_medias p-2 text-right pr-4">
                                 <i id="edit{{ loop.index }}" class="mr-2 text-dark fas fa-pencil-alt"></i></a>
                                 <a onclick="return confirm('Etes-vous sûr de vouloir supprimer cette image ?')" href="{{ path('delete_image', {'image_id':image.id}) }}"><i class="text-dark fas fa-trash-alt"></i></a>
@@ -56,7 +56,7 @@
                                     {{ form_start(imageFormView, {'attr': {'id':'imageForm'~loop.index,'class': 'formMh imageForm text-left', 'action' : path('edit_image', { 'image_id':image.id }) }}) }}
                                     {{ form_end(imageFormView) }}
                             </div>
-                        {% endif %}
+
                     </div>
                 {% endif %}
             {% endfor %}
@@ -66,7 +66,6 @@
                 <div class="trick_medias mb-4 mt-5 shadow" style="width:300px; height:190px;">
                     {{ video.iframe |raw }}
 
-                    {% if trick.author == app.user %}
                         <div class="text-right pr-2">
                             <i id="editVideo{{ loop.index }}" class="mr-2 text-dark fas fa-pencil-alt"></i>
                             <a onclick="return confirm('Etes-vous sûr de vouloir supprimer cette video ?')" href="{{ path('delete_video', {'video_id':video.id}) }}"><i class="text-dark fas fa-trash-alt"></i></a>
@@ -75,7 +74,7 @@
                                 <button type="submit" class="btn btn-primary"><i class="far fa-save"></i></button>
                             {{ form_end(videoFormView) }}
                         </div>
-                    {% endif %}
+
                 </div>
             {% endfor %}
         </div>
@@ -106,8 +105,8 @@
                 {% endfor %}
             </div>
             <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Auteur : {{ trick.author.username }}</div>
-            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Créé le {{ trick.creationDate|date("m/d/Y") }}</div>
-            {% if trick.updateDate is not empty %}
+            <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Créé le {{ trick.creationDate|date("d/m/Y") }}</div>
+            {% if trick.updateDate is not empty and trick.updateDate > trick.creationDate %}
                 <div class="p-2 mr-2 mb-2 rounded bg-primary text-white" >Modifié le {{ trick.updateDate|date("m/d/Y") }}</div>
             {% endif %}
         </div>

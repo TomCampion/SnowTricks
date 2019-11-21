@@ -3,10 +3,11 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Trick;
 use App\Entity\Video;
 use App\Form\VideoType;
-use App\Service\AccesHelper;
+use App\Service\AccessHelper;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,14 +23,14 @@ class VideoController extends AbstractController
     private $em;
 
     /**
-     * @var AccesHelper
+     * @var AccessHelper
      */
-    private $accesHelper;
+    private $accessHelper;
 
-    public function __construct(ObjectManager $em, AccesHelper $accesHelper)
+    public function __construct(ObjectManager $em, AccessHelper $accessHelper)
     {
         $this->em = $em;
-        $this->accesHelper = $accesHelper;
+        $this->accessHelper = $accessHelper;
     }
 
     /**
@@ -42,7 +43,7 @@ class VideoController extends AbstractController
     {
         $trick = $this->em->getRepository(Trick::class)->findOneBy(['id' => $trick_id]);
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 
@@ -62,10 +63,10 @@ class VideoController extends AbstractController
                 "Vidéo ajouté"
             );
 
-            return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
         }
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 
     /**
@@ -79,7 +80,7 @@ class VideoController extends AbstractController
         $video = $this->em->getRepository(Video::class)->findOneBy(['id' => $video_id]);
         $trick = $video->getTrick();
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 
@@ -96,10 +97,18 @@ class VideoController extends AbstractController
                 "Modification de la vidéo enregistré"
             );
 
-            return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+            return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
         }
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        $errors = $videoForm->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed",
+                $error->getMessage()
+            );
+        }
+
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 
     /**
@@ -112,7 +121,7 @@ class VideoController extends AbstractController
         $video = $this->em->getRepository(Video::class)->findOneBy(['id' => $video_id]);
         $trick = $video->getTrick();
 
-        if($this->accesHelper->checkTrickAuthor($trick, $this->getUser()) === false){
+        if($this->accessHelper->checkTrickAuthor($trick, $this->getUser()) === false){
             $this->redirectToRoute('home');
         }
 
@@ -124,6 +133,6 @@ class VideoController extends AbstractController
             "Suppression de la vidéo éffectué !"
         );
 
-        return $this->redirectToRoute('edit_trick',['trick_name' => $trick->getName()]);
+        return $this->redirectToRoute('edit_trick',['trick_slug' => $trick->getSlug()]);
     }
 }

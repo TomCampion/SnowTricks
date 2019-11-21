@@ -17,16 +17,28 @@
                                         <div class="row">
                                             <div class="col-12 col-sm-auto mb-3">
                                                 <div class="mx-auto" style="width: 140px; height: 140px;">
-                                                    <img class="w-100 h-100 rounded-circle" src="{{ asset('images/profile_picture/' ~ app.user.id ~'/'~ app.user.profilePictureFileName) }}">
+                                                    {% if app.user.profilePictureFileName is empty%}
+                                                        <img class="w-100 h-100 rounded-circle" src="{{ asset('images/profile_picture/default.png') }}">
+                                                    {% else %}
+                                                        <img class="w-100 h-100 rounded-circle" src="{{ asset('images/profile_picture/' ~ app.user.id ~'/'~ app.user.profilePictureFileName) }}">
+                                                    {%  endif %}
                                                 </div>
                                             </div>
                                             <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
                                                 <div class="text-center text-sm-left mb-2 mb-sm-0">
                                                     <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{app.user.username}}</h4>
                                                     <div id="change-avatar" class="mt-5">
+
+                                                        {% for message in app.flashes('failed_avatar') %}
+                                                            <div class="mt-3 container alert alert-danger">
+                                                                {{ message }}
+                                                            </div>
+                                                        {% endfor %}
+
                                                         <button class="btn btn-primary" type="button">
                                                             <i class="fa fa-fw fa-camera"></i>
                                                             {{ form_start(formAvatar) }}
+                                                                {{ form_errors(formAvatar.avatar) }}
                                                                 {{ form_rest(formAvatar.avatar) }}
                                                             {{ form_end(formAvatar) }}
                                                         </button>
@@ -60,10 +72,18 @@
                                                                 <div class="mb-2"><b>Informations</b></div>
                                                                     <div class="form-group">
 
+                                                                        {% for message in app.flashes('failed_profile') %}
+                                                                            <div class="mt-3 container alert alert-danger">
+                                                                                {{ message }}
+                                                                            </div>
+                                                                        {% endfor %}
+
                                                                         {{ form_start(form) }}
-                                                                            {{ form_rest(form) }}
-                                                                            <button class="btn btn-primary" type="submit">Enregistrer</button>
+                                                                            <label>Email</label>
+                                                                            {{ form_widget(form.email) }}
+                                                                            <button class="mt-3 btn btn-primary" type="submit">Modifier</button>
                                                                         {{ form_end(form) }}
+
                                                                     </div>
                                                                 <div class="row">
                                                                     <div class="col mt-2">
@@ -134,7 +154,7 @@
                                                     </thead>
                                                     <tbody>
                                                         {% for trick in tricks %}
-                                                                <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_name':trick.name}) }}' ">
+                                                                <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_slug':trick.slug}) }}' ">
                                                                     <td>{{ trick.name }}</td>
                                                                     <td>{{ trick.description|length > 150 ? trick.description|slice(0, 170) ~ '...' : trick.description  }}</td>
                                                                     <td>{{ trick.category }}</td>
@@ -161,7 +181,7 @@
 
                                                 <table class="table table-striped">
                                                     <thead>
-                                                    <tr>
+                                                    <tr >
                                                         <th scope="col">Trick</th>
                                                         <th scope="col">Commentaire</th>
                                                         <th scope="col">Date de création</th>
@@ -170,7 +190,7 @@
                                                     </thead>
                                                     <tbody>
                                                     {% for comment in comments %}
-                                                        <tr>
+                                                        <tr class="cursor-pointer" onclick="document.location = '{{ path('trick_details',{'trick_slug':comment.trick.slug}) }}' ">
                                                             <td>{{ comment.trick.name }}</td>
                                                             <td>{{ comment.content }}</td>
                                                             <td>{{ comment.creationDate|date("m/d/Y H:i") }}</td>

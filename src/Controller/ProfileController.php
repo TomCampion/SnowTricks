@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\ChangePasswordType;
@@ -16,8 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProfileController extends AbstractController
 {
@@ -34,10 +33,9 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profil", name="profile")
      * @param Request $request
-     * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function profile(Request $request, ValidatorInterface $validator): Response
+    public function profile(Request $request): Response
     {
         $user = $this->getUser();
 
@@ -93,6 +91,14 @@ class ProfileController extends AbstractController
         if($editProfileForm->isSubmitted() and $editProfileForm->isValid())
         {
            $this->em->flush();
+        }
+
+        $errors = $editProfileForm->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed_profile",
+                $error->getMessage()
+            );
         }
 
         return $this->redirectToRoute('profile');
@@ -181,6 +187,14 @@ class ProfileController extends AbstractController
                     "Le site a rencontré un problème, votre avatar n'a pas pu être téléchargé."
                 );
             }
+        }
+
+        $errors = $formAvatar->getErrors(true);
+        foreach ($errors as $error){
+            $this->addFlash(
+                "failed_avatar",
+                $error->getMessage()
+            );
         }
 
         return $this->redirectToRoute('profile');

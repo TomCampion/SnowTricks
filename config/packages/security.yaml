@@ -38,3 +38,4 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profil$, roles: ROLE_USER }
         - { path: ^/add_trick$, roles: ROLE_USER }
+        - { path: ^/tricks/editer$, roles: ROLE_USER }

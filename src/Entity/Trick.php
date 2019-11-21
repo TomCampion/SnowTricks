@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Service\SlugHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "name",
  *     message="ce nom est déjà utilisé"
  * )
+ * @UniqueEntity("slug")
  * @ORM\HasLifecycleCallbacks()
  */
 class Trick
@@ -37,19 +40,24 @@ class Trick
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100, unique=true)
+     *  @ORM\Column(type="string", length=100, unique=true)
      *  @Assert\NotNull(
      *     message= "Vous devez renseigner un nom"
      *  )
      *  @Assert\NotBlank(
      *     message= "Vous devez renseigner un nom"
      *  )
-     * @Assert\Length(
+     *  @Assert\Length(
      *      max = 100,
      *      maxMessage = "le nom ne peut pas excéder {{ limit }} caractères"
-     * )
+     *  )
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $slug;
 
     /**
      * @ORM\Column(type="text")
@@ -107,12 +115,12 @@ class Trick
     private $videos;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\comment", mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", orphanRemoval=true)
      */
     private $comments;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="tricks")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;
@@ -306,10 +314,32 @@ class Trick
         return $this;
     }
 
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function SetSlugOnCreation()
+    {
+        $slugHelper = new SlugHelper();
+        $this->slug = $slugHelper->slugify($this->getName(), '-');
+    }
+
     /**
      * @ORM\PreUpdate
      */
-    public function updateDate()
+    public function SetUpdateDateOnCreation()
     {
         $this->setUpdateDate(new \Datetime());
     }
@@ -317,8 +347,19 @@ class Trick
     /**
      * @ORM\PrePersist
      */
-    public function creationDate()
+    public function SetCreationDateOnCreation()
     {
         $this->setCreationDate(new \Datetime());
     }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function deleteImage()
+    {
+        $filesystem = new Filesystem();
+
+        $filesystem->remove('images/trick/'.$this->getId());
+    }
+
 }
