@@ -24,9 +24,11 @@
             </div>
             {% endfor %}
 
+            {% if trick.images.count > 1 or trick.videos is not empty %}
             <div id="show_medias" class="text-center mt-3">
                 <button onclick="showMedias()" type="button" class="btn-lg btn-primary">Voir médias</button>
             </div>
+            {% endif %}
 
             <div id="medias" class="container-fluid d-flex mt-2 justify-content-md-between flex-wrap justify-content-center">
                 {% for image in trick.images %}
@@ -113,6 +115,7 @@
 
             function showMedias(){
                 document.getElementById('medias').style.cssText = "display:flex !important";
+                $("#show_medias").remove();
             }
 
             function setOffset(){
