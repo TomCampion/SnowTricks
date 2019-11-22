@@ -51,8 +51,8 @@
 
 <nav id="mobile-navbar" class="d-sm-flex d-md-none d-xs-flex nav-xs nav bg-light font-blue fixed-bottom vw_100">
     <ul class="nav justify-content-around col-xs-12 col-sm-12">
-        <li class="nav-item"><a class="nav-link" href=""><i class="fas fa-home font-blue"></i></a></li>
-        <li class="nav-item"><a class="nav-link" href=""><i class="fas fa-bookmark font-blue"></i></a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ path('home') }}"><i class="fas fa-home font-blue"></i></a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ path('home') }}"><i class="fas fa-bookmark font-blue"></i></a></li>
         {% if app.user %}
             <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt font-blue"></i></a></li>
         {% else %}
